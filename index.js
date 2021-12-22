@@ -5,6 +5,38 @@ enable_element = (id) => get_element_by_id(id).disabled = false;
 disable_element = (id) => get_element_by_id(id).disabled = true;
 query_selector = (argument) => document.querySelector(argument);
 sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+hide_element = (element) => element.classList.add("d-none");
+show_element = (element) => element.classList.remove("d-none");
+
+// Dark and Light mode switch
+const dark = get_element_by_id("dark");
+const light = get_element_by_id("light");
+
+function switch_to_dark(){
+    hide_element(dark);
+    show_element(light);
+    document.body.style.backgroundColor = "#212529";
+    document.documentElement.style.setProperty("--bar-background-color", "#f5f5f5");
+    document.documentElement.style.setProperty("--sort-btn-color", "#f5f5f5");
+    document.documentElement.style.setProperty("--shadow-color", "#888888");
+    document.documentElement.style.setProperty("--sort-btn-background-color", "#212529");
+    document.documentElement.style.setProperty("--source-code-color", "#00ffff");
+    document.body.style.color = "#fff";
+}
+function swith_to_light(){
+    hide_element(light);
+    show_element(dark);
+    document.body.style.backgroundColor = "#f5f5f5";
+    document.documentElement.style.setProperty("--bar-background-color", "#212529");
+    document.documentElement.style.setProperty("--sort-btn-color", "#212529");
+    document.documentElement.style.setProperty("--shadow-color", "#212529");
+    document.documentElement.style.setProperty("--sort-btn-background-color", "#f5f5f5");
+    document.documentElement.style.setProperty("--source-code-color", "#000000");
+    document.body.style.color = "#000";
+}
+
+dark.addEventListener("click", switch_to_dark);
+light.addEventListener("click", swith_to_light);
 
 // Navigation bar
 A = document.getElementsByClassName("dropdown-item");
@@ -40,10 +72,10 @@ document.getElementById("speed").addEventListener("input", speed_listener);
 async function sorting_bar(){
     while (sorting_progress){
         arr = Array.from(sorting_text);
-        arr[sorting_progress % sorting_text.length] = ['/', '-', '\\', '|'][sorting_progress % 4];
-        get_element_by_id("SORT").innerHTML = arr.join('');
+        arr[sorting_progress % sorting_text.length] = ["/", "-", "\\", "|"][sorting_progress % 4];
+        get_element_by_id("SORT").innerHTML = arr.join("");
         sorting_progress++;
-        await sleep(1000);
+        await sleep(500);
     }
 };
 
@@ -104,6 +136,7 @@ SORT.addEventListener("click", () => {
     else if (algo == "Insertion Sort") insertion_sort();
     else if (algo == "Gnome Sort") gnome_sort();
     else if (algo == "Cocktail Sort") cocktail_sort();
+    else if (algo == "Quick Sort") quick_sort(0, size - 1);
     setTimeout(function (){
         enable_element("SORT");
         enable_element("nav-menu");
@@ -223,10 +256,42 @@ function cocktail_sort(){
             visual(bars[i], bar_value[i], main_color);
             visual(bars[i + 1], bar_value[i + 1], main_color);
         }
+        visual(bars[index], bar_value[index++], sorted_color);
         visual(bars[lsize], bar_value[lsize], sorted_color);
-        index++;
     }
     for (let i = 0; i < size; i++)visual(bars[i],bar_value[i],sorted_color)
+}
+
+// Quick sort algorithm
+function quick_sort(start, end) {
+    if (start > end){
+        visual(bars[start], bar_value[start], sorted_color);
+        return;
+    }
+    if (start == end){
+        visual(bars[start], bar_value[start], sorted_color);
+        return;
+    }
+    let pivot = bar_value[start];
+    let head = start;
+    let tail = end + 1;
+    while (head < tail){
+        do {
+            visual(bars[head], bar_value[head], c_1);
+            visual(bars[head], bar_value[head], main_color);
+            head++;
+        } while (bar_value[head] <= pivot);
+        do {
+            tail--;
+            visual(bars[tail], bar_value[tail], c_2);
+            visual(bars[tail], bar_value[tail], main_color);
+        } while (bar_value[tail] > pivot);
+        if (head < tail) [bar_value[head], bar_value[tail]] = [bar_value[tail], bar_value[head]];
+    }
+    [bar_value[start], bar_value[tail]] = [bar_value[tail], bar_value[start]];
+    visual(bars[tail], bar_value[tail], sorted_color);
+    quick_sort(start, tail - 1);
+    quick_sort(tail + 1, end);
 }
 
 // Generate new unsorted array
