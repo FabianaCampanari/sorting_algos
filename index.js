@@ -137,6 +137,7 @@ SORT.addEventListener("click", () => {
     else if (algo == "Gnome Sort") gnome_sort();
     else if (algo == "Cocktail Sort") cocktail_sort();
     else if (algo == "Quick Sort") quick_sort(0, size - 1);
+    else if (algo == "Heap Sort") heap_sort();
     setTimeout(function (){
         enable_element("SORT");
         enable_element("nav-menu");
@@ -292,6 +293,45 @@ function quick_sort(start, end) {
     visual(bars[tail], bar_value[tail], sorted_color);
     quick_sort(start, tail - 1);
     quick_sort(tail + 1, end);
+}
+
+// Heap sort algorithm
+function heap_sort(){
+    for (let i = 0; i < size; i++) heap_up(i);
+    for (let i = 0; i < size - 1; i++) {
+        let last = size - 1 - i;
+        [bar_value[0], bar_value[last]] = [bar_value[last], bar_value[0]];
+        visual(bars[0], bar_value[0], sorted_color);
+        visual(bars[last], bar_value[last], sorted_color);
+        heap_down(last);
+    }
+}
+function heap_up(i){
+    let root = Math.floor((i - 1) / 2);
+    while (i > 0 && bar_value[root] < bar_value[i]) {
+        visual(bars[i], bar_value[i], c_1);
+        visual(bars[root], bar_value[root], c_2);
+        [bar_value[i], bar_value[root]] = [bar_value[root], bar_value[i]];
+        visual(bars[i], bar_value[i], main_color);
+        visual(bars[root], bar_value[root], main_color);
+        i = root;
+        root = Math.floor((i - 1) / 2);
+    }
+    visual(bars[i], bar_value[i], main_color);
+}
+function heap_down(size){
+    let i = 0;
+    while (2 * i + 1 < size) {
+        let child = 2 * i + 1;
+        if (2 * i + 2 < size && bar_value[2 * i + 2] >= bar_value[child]) child = 2 * i + 2;
+        visual(bars[i], bar_value[i], c_1);
+        visual(bars[child], bar_value[child], c_2);
+        visual(bars[i], bar_value[i], main_color);
+        visual(bars[child], bar_value[child], main_color);
+        if (bar_value[i] >= bar_value[child]) return;
+        [bar_value[i], bar_value[child]] = [bar_value[child], bar_value[i]];
+        i = child;
+    }
 }
 
 // Generate new unsorted array
