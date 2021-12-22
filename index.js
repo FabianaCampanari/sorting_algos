@@ -92,6 +92,7 @@ SORT.addEventListener("click", () => {
     else if (algo == "Selection Sort") selection_sort();
     else if (algo == "Insertion Sort") insertion_sort();
     else if (algo == "Gnome Sort") gnome_sort();
+    else if (algo == "Cocktail Sort") cocktail_sort();
     setTimeout(function (){
         enable_element("SORT");
         enable_element("nav-menu");
@@ -176,6 +177,44 @@ function gnome_sort() {
     return;
 }
 
+// Cocktail sort algorithm
+function cocktail_sort(){
+    let swapped = true;
+    let index = 0;
+    let lsize = size;
+    while (swapped){
+        swapped = false;
+        for (let i = index; i < lsize - 1; ++i){
+            visual(bars[i], bar_value[i], c_1);
+            visual(bars[i + 1], bar_value[i + 1], c_2);
+            if (bar_value[i] > bar_value[i + 1]){
+                [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
+                visual(bars[i], bar_value[i], c_2);
+                visual(bars[i + 1], bar_value[i + 1], c_1);
+                swapped = true;
+            }
+            visual(bars[i], bar_value[i], main_color);
+            visual(bars[i + 1], bar_value[i + 1], main_color);
+        }
+        swapped = false;
+        lsize--;
+        for (let i = lsize - 1; i >= index; i--) {
+            visual(bars[i], bar_value[i], c_1);
+            visual(bars[i + 1], bar_value[i + 1], c_2);
+            if (bar_value[i] > bar_value[i + 1]) {
+                [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
+                visual(bars[i], bar_value[i], c_2);
+                visual(bars[i + 1], bar_value[i + 1], c_1);
+                swapped = true;
+            }
+            visual(bars[i], bar_value[i], main_color);
+            visual(bars[i + 1], bar_value[i + 1], main_color);
+        }
+        visual(bars[lsize], bar_value[lsize], sorted_color);
+        index++;
+    }
+    for (let i = 0; i < size; i++)visual(bars[i],bar_value[i],sorted_color)
+}
 
 // Generate new unsorted array
 randomize_array();
