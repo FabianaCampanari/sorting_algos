@@ -21,6 +21,8 @@ for (let i = 0; i < A.length; i++){
 bar_value = [];
 bars = [];
 size = 35;
+delay = 10000 / (Math.floor(size / 10) * 500);
+time = 0;
 BARS = query_selector(".BARS");
 width = 2;
 sorting_text = "Sorting";
@@ -30,7 +32,9 @@ size_listener = () => {
     width = 60 / size;
     randomize_array();
 }
+speed_listener = () => delay = 10000 / (Math.floor(size / 10) * get_element_by_id("speed").value);
 document.getElementById("size").addEventListener("input", size_listener);
+document.getElementById("speed").addEventListener("input", speed_listener);
 
 // Progress of the sorting
 async function sorting_bar(){
@@ -48,6 +52,8 @@ const randomize_array = () => {
     clearTimeout();
     enable_element("SORT");
     enable_element("nav-menu");
+    enable_element("size");
+    enable_element("speed");
     time = 0;
     sorting_progress = 0;
     get_element_by_id("SORT").innerHTML = "Sort";
@@ -66,11 +72,7 @@ const randomize_array = () => {
 };
 
 
-// Style                                             
-speed = 500;                                         
-delay = 10000 / (Math.floor(size / 10) * speed);
-time = 0;
-
+// Style
 main_color = "#DC143C";
 c_1 = "#FFFF00";
 c_2 = "#0096FF";
@@ -94,6 +96,8 @@ SORT.addEventListener("click", () => {
     sorting_bar();
     disable_element("SORT");
     disable_element("nav-menu");
+    disable_element("size");
+    disable_element("speed");
     for (let i = 0; i < size; i++) bars[i].style.backgroundColor = "#f5f5f5";
     if (algo == "Bubble Sort") bubble_sort();
     else if (algo == "Selection Sort") selection_sort();
@@ -103,6 +107,8 @@ SORT.addEventListener("click", () => {
     setTimeout(function (){
         enable_element("SORT");
         enable_element("nav-menu");
+        enable_element("size");
+        enable_element("speed");
         get_element_by_id("SORT").innerHTML = "Sort";
         sorting_progress = 0;
         time = 0;
@@ -170,14 +176,14 @@ function gnome_sort() {
     let index = 0;
     while (index < size) {
         if (bar_value[index] >= bar_value[index - 1] || index == 0){
-            visual(bars[index], bar_value[index], c_2);
+            visual(bars[index], bar_value[index], c_1);
             visual(bars[index], bar_value[index], sorted_color);
             index++;
         }
         else {
             [bar_value[index], bar_value[index - 1]] = [bar_value[index - 1], bar_value[index]]
             visual(bars[index], bar_value[index], c_2);
-            visual(bars[index + 1], bar_value[index + 1], c_1);
+            visual(bars[index + 1], bar_value[index + 1], main_color);
             index--;
         }
     }
