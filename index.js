@@ -1,7 +1,10 @@
 // Lambda expressions
 randint = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 get_element_by_id = (id) => document.getElementById(id);
+enable_element = (id) => get_element_by_id(id).disabled = false;
+disable_element = (id) => get_element_by_id(id).disabled = true;
 query_selector = (argument) => document.querySelector(argument);
+sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Navigation bar
 A = document.getElementsByClassName("dropdown-item");
@@ -20,16 +23,29 @@ bars = [];
 size = 35;
 BARS = query_selector(".BARS");
 width = 2;
+sorting_text = "Sorting";
+
+// Progress of the sorting
+async function sorting_bar(){
+    while (sorting_progress){
+        arr = Array.from(sorting_text);
+        arr[sorting_progress % sorting_text.length] = ['/', '-', '\\', '|'][sorting_progress % 4];
+        get_element_by_id("SORT").innerHTML = arr.join('');
+        sorting_progress++;
+        await sleep(1000);
+    }
+};
 
 // Generate random array
 const randomize_array = () => {
     clearTimeout();
-    get_element_by_id("SORT").disabled = false;
-    get_element_by_id("nav-menu").disabled = false;
-    c = 0;
+    enable_element("SORT");
+    enable_element("nav-menu");
+    time = 0;
+    sorting_progress = 0;
     get_element_by_id("SORT").innerHTML = "Sort";
     BARS.innerHTML = "";
-    for (i = 0; i < size; i++){
+    for (let i = 0; i < size; i++){
         bar_value[i] = randint(50, 500);
         bars[i] = document.createElement("div");
         bars[i].classList.add("bar");
@@ -46,7 +62,7 @@ const randomize_array = () => {
 // Style                                             
 speed = 500;                                         
 delay = 10000 / (Math.floor(size / 10) * speed);
-c = 0;
+time = 0;
 
 main_color = "#DC143C";
 c_1 = "#FFFF00";
@@ -57,7 +73,7 @@ const visual = (bar, height, color) => {
     setTimeout(() => {
         bar.style.height = `${height}px`;
         bar.style.backgroundColor = color;
-    }, (c += delay));
+    }, (time += delay));
 };
 
 
@@ -67,17 +83,21 @@ query_selector(".random-array").addEventListener("click", randomize_array);
 
 SORT = get_element_by_id("SORT");
 SORT.addEventListener("click", () => {
-    get_element_by_id("SORT").disabled = true;
-    get_element_by_id("nav-menu").disabled = true;
+    sorting_progress = 1;
+    sorting_bar();
+    disable_element("SORT");
+    disable_element("nav-menu");
     for (let i = 0; i < size; i++) bars[i].style.backgroundColor = "#f5f5f5";
     if (algo == "Bubble Sort") bubble_sort();
     else if (algo == "Selection Sort") selection_sort();
-    setTimeout(function () {
-        get_element_by_id("SORT").disabled = false;
-        get_element_by_id("nav-menu").disabled = false;
+    else if (algo == "Insertion Sort") insertion_sort();
+    setTimeout(function (){
+        enable_element("SORT");
+        enable_element("nav-menu");
         get_element_by_id("SORT").innerHTML = "Sort";
-        c = 0;
-    }, c);
+        sorting_progress = 0;
+        time = 0;
+    }, time);
 });
 
 // Bubble sort algorithm
@@ -113,6 +133,27 @@ function selection_sort() {
         if (min != i) visual(bars[min], bar_value[min], main_color);
     }
     visual(bars[size - 1], bar_value[size - 1], sorted_color);
+}
+
+// Insertion sort algorithm
+function insertion_sort() {
+    for (let i = 0; i < size; i++) {
+        temp = bar_value[i];
+        visual(bars[i], bar_value[i], c_2);
+        let j = i - 1;
+        for (j = i - 1; j >= 0 && bar_value[j] > temp; j--) {
+            bar_value[j + 1] = bar_value[j];
+            visual(bars[j], bar_value[j], c_1);
+            visual(bars[j + 1], bar_value[j + 1], c_2);
+            visual(bars[j + 1], bar_value[j + 1], sorted_color);
+            visual(bars[j], bar_value[j], sorted_color);
+        }
+        bar_value[j + 1] = temp;
+        visual(bars[i], bar_value[i], c_1);
+        visual(bars[i], bar_value[i], sorted_color);
+        visual(bars[j + 1], bar_value[j + 1], c_2);
+        visual(bars[j + 1], bar_value[j + 1], sorted_color);
+    }
 }
 
 // Generate new unsorted array
