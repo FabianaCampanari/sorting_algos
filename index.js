@@ -91,6 +91,7 @@ SORT.addEventListener("click", () => {
     if (algo == "Bubble Sort") bubble_sort();
     else if (algo == "Selection Sort") selection_sort();
     else if (algo == "Insertion Sort") insertion_sort();
+    else if (algo == "Gnome Sort") gnome_sort();
     setTimeout(function (){
         enable_element("SORT");
         enable_element("nav-menu");
@@ -155,6 +156,26 @@ function insertion_sort() {
         visual(bars[j + 1], bar_value[j + 1], sorted_color);
     }
 }
+
+// Gnome sort algorithm
+function gnome_sort() {
+    let index = 0;
+    while (index < size) {
+        if (bar_value[index] >= bar_value[index - 1] || index == 0){
+            visual(bars[index], bar_value[index], c_2);
+            visual(bars[index], bar_value[index], sorted_color);
+            index++;
+        }
+        else {
+            [bar_value[index], bar_value[index - 1]] = [bar_value[index - 1], bar_value[index]]
+            visual(bars[index], bar_value[index], c_2);
+            visual(bars[index + 1], bar_value[index + 1], c_1);
+            index--;
+        }
+    }
+    return;
+}
+
 
 // Generate new unsorted array
 randomize_array();
