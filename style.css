@@ -9,6 +9,9 @@ a, a:hover, a:focus, a:active{
     text-decoration: none;
     color: #ffffff;
 }
+.range {
+    color: #ffffff;
+}
 .about{
     font-size: 25px;
     font-family: 'Courier New', Courier, monospace;

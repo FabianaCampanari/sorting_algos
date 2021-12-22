@@ -25,6 +25,13 @@ BARS = query_selector(".BARS");
 width = 2;
 sorting_text = "Sorting";
 
+size_listener = () => {
+    size = get_element_by_id("size").value;
+    width = 60 / size;
+    randomize_array();
+}
+document.getElementById("size").addEventListener("input", size_listener);
+
 // Progress of the sorting
 async function sorting_bar(){
     while (sorting_progress){
