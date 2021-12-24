@@ -130,7 +130,6 @@ SORT.addEventListener("click", () => {
     disable_element("nav-menu");
     disable_element("size");
     disable_element("speed");
-    for (let i = 0; i < size; i++) bars[i].style.backgroundColor = "#f5f5f5";
     if (algo == "Bubble Sort") bubble_sort();
     else if (algo == "Selection Sort") selection_sort();
     else if (algo == "Insertion Sort") insertion_sort();
