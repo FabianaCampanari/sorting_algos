@@ -81,7 +81,7 @@ a, a:hover, a:focus, a:active{
     bottom: 0px;
     display: inline-block;
 }
-.btn-sort{
+.btn-sort, .btn-sort:disabled{
     background-color: var(--sort-btn-background-color);
     color: var(--sort-btn-color);
     font-size: 1.75rem;
