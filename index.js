@@ -102,23 +102,42 @@ function selectAlgorithm ( event ){
 
 
 // Sorting bars
-bar_value = [];
-bars = [];
-size = 35;
-delay = 10000 / (Math.floor(size / 10) * 500);
-time = 0;
-BARS = query(".BARS");
-width = 2;
-sorting_text = "Sorting";
 
-size_listener = () => {
-    size = elementById("size").value;
-    width = 60 / size;
+let
+    sorting_text = 'Sorting' ,
+    bar_value = [] ,
+    width = 2 ,
+    BARS = query('.BARS') ,
+    bars = [] ,
+    size = 35 ,
+    time = 0 ;
+
+let delay = 10000 / (floor(size / 10) * 500);
+
+
+elementById('size')
+    .addEventListener('input',onSizeChange);
+
+elementById('speed')
+    .addEventListener('input',onSpeedChange);
+    
+
+function onSizeChange ( event ){
+    
+    const { value } = event.target;
+    
+    width = 60 / value;
+
     randomize_array();
 }
-speed_listener = () => delay = 10000 / (Math.floor(size / 10) * elementById("speed").value);
-document.getElementById("size").addEventListener("input", size_listener);
-document.getElementById("speed").addEventListener("input", speed_listener);
+
+function onSpeedChange ( event ){
+    
+    const { value } = event.target;
+    
+    delay = 10000 / (floor(size / 10) * value);    
+}
+    
 
 // Progress of the sorting
 async function sorting_bar(){
@@ -171,7 +190,9 @@ const visual = (bar, height, color) => {
 
 
 // Randomize array
-query(".random-array").addEventListener("click", randomize_array);
+
+query('.random-array')
+    .addEventListener('click',randomize_array);
 
 
 SORT = elementById("SORT");
