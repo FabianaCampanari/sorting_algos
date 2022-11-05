@@ -1,20 +1,42 @@
-// Lambda expressions
-randint = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-get_element_by_id = (id) => document.getElementById(id);
-enable_element = (id) => get_element_by_id(id).disabled = false;
-disable_element = (id) => get_element_by_id(id).disabled = true;
-query_selector = (argument) => document.querySelector(argument);
-sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-hide_element = (element) => element.classList.add("d-none");
-show_element = (element) => element.classList.remove("d-none");
+
+const { random , floor } = Math;
+
+
+const randomInt = ( minimum , maximum ) =>
+    floor(random() * ( maximum - minimum + 1) + minimum);
+    
+const elementById = ( id ) =>
+    document.getElementById(id);
+    
+    
+const query = ( selector ) =>
+    document.querySelector(selector);
+    
+const sleep = ( millis ) =>
+    new Promise((resolve) => setTimeout(resolve,millis));
+
+
+const enableElement = ( id ) =>
+    elementById(id).disable = false;
+    
+const disableElement = ( id ) =>
+    elementById(id).disable = true;
+    
+const hideElement = ( element ) =>
+    element.classList.add('d-none');
+    
+const showElement = ( element ) =>
+    element.classList.remove('d-none');
+
 
 // Dark and Light mode switch
-const dark = get_element_by_id("dark");
-const light = get_element_by_id("light");
+
+const dark = elementById("dark");
+const light = elementById("light");
 
 function switch_to_dark(){
-    hide_element(dark);
-    show_element(light);
+    hideElement(dark);
+    showElement(light);
     document.body.style.backgroundColor = "#212529";
     document.documentElement.style.setProperty("--bar-background-color", "#f5f5f5");
     document.documentElement.style.setProperty("--sort-btn-color", "#f5f5f5");
@@ -23,9 +45,10 @@ function switch_to_dark(){
     document.documentElement.style.setProperty("--source-code-color", "#00ffff");
     document.body.style.color = "#fff";
 }
+
 function swith_to_light(){
-    hide_element(light);
-    show_element(dark);
+    hideElement(light);
+    showElement(dark);
     document.body.style.backgroundColor = "#f5f5f5";
     document.documentElement.style.setProperty("--bar-background-color", "#212529");
     document.documentElement.style.setProperty("--sort-btn-color", "#212529");
@@ -44,8 +67,8 @@ algo = "Bubble Sort";
 for (let i = 0; i < A.length; i++){
     A[i].addEventListener("click", function(){
         algo = A[i].innerHTML;
-        A[i].innerHTML = get_element_by_id("nav-menu").innerHTML;
-        get_element_by_id("nav-menu").innerHTML = algo;
+        A[i].innerHTML = elementById("nav-menu").innerHTML;
+        elementById("nav-menu").innerHTML = algo;
     });
 }
 
@@ -55,16 +78,16 @@ bars = [];
 size = 35;
 delay = 10000 / (Math.floor(size / 10) * 500);
 time = 0;
-BARS = query_selector(".BARS");
+BARS = query(".BARS");
 width = 2;
 sorting_text = "Sorting";
 
 size_listener = () => {
-    size = get_element_by_id("size").value;
+    size = elementById("size").value;
     width = 60 / size;
     randomize_array();
 }
-speed_listener = () => delay = 10000 / (Math.floor(size / 10) * get_element_by_id("speed").value);
+speed_listener = () => delay = 10000 / (Math.floor(size / 10) * elementById("speed").value);
 document.getElementById("size").addEventListener("input", size_listener);
 document.getElementById("speed").addEventListener("input", speed_listener);
 
@@ -73,7 +96,7 @@ async function sorting_bar(){
     while (sorting_progress){
         arr = Array.from(sorting_text);
         arr[sorting_progress % sorting_text.length] = ["/", "-", "\\", "|"][sorting_progress % 4];
-        get_element_by_id("SORT").innerHTML = arr.join("");
+        elementById("SORT").innerHTML = arr.join("");
         sorting_progress++;
         await sleep(500);
     }
@@ -82,16 +105,16 @@ async function sorting_bar(){
 // Generate random array
 const randomize_array = () => {
     clearTimeout();
-    enable_element("SORT");
-    enable_element("nav-menu");
-    enable_element("size");
-    enable_element("speed");
+    enableElement("SORT");
+    enableElement("nav-menu");
+    enableElement("size");
+    enableElement("speed");
     time = 0;
     sorting_progress = 0;
-    get_element_by_id("SORT").innerHTML = "Sort";
+    elementById("SORT").innerHTML = "Sort";
     BARS.innerHTML = "";
     for (let i = 0; i < size; i++){
-        bar_value[i] = randint(50, 500);
+        bar_value[i] = randomInt(50, 500);
         bars[i] = document.createElement("div");
         bars[i].classList.add("bar");
         BARS.appendChild(bars[i]);
@@ -119,17 +142,17 @@ const visual = (bar, height, color) => {
 
 
 // Randomize array
-query_selector(".random-array").addEventListener("click", randomize_array);
+query(".random-array").addEventListener("click", randomize_array);
 
 
-SORT = get_element_by_id("SORT");
+SORT = elementById("SORT");
 SORT.addEventListener("click", () => {
     sorting_progress = 1;
     sorting_bar();
-    disable_element("SORT");
-    disable_element("nav-menu");
-    disable_element("size");
-    disable_element("speed");
+    disableElement("SORT");
+    disableElement("nav-menu");
+    disableElement("size");
+    disableElement("speed");
     if (algo == "Bubble Sort") bubble_sort();
     else if (algo == "Selection Sort") selection_sort();
     else if (algo == "Insertion Sort") insertion_sort();
@@ -138,11 +161,11 @@ SORT.addEventListener("click", () => {
     else if (algo == "Quick Sort") quick_sort(0, size - 1);
     else if (algo == "Heap Sort") heap_sort();
     setTimeout(function (){
-        enable_element("SORT");
-        enable_element("nav-menu");
-        enable_element("size");
-        enable_element("speed");
-        get_element_by_id("SORT").innerHTML = "Sort";
+        enableElement("SORT");
+        enableElement("nav-menu");
+        enableElement("size");
+        enableElement("speed");
+        elementById("SORT").innerHTML = "Sort";
         sorting_progress = 0;
         time = 0;
     }, time);
