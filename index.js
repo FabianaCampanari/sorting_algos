@@ -200,17 +200,24 @@ function randomizeValues (){
 
 
 // Style
-main_color = "#DC143C";
-c_1 = "#FFFF00";
-c_2 = "#0096FF";
-sorted_color = "#3CB371";
 
-const visual = (bar, height, color) => {
+sorted_color = '#3CB371';
+main_color = '#DC143C';
+c_1 = '#FFFF00';
+c_2 = '#0096FF';
+
+
+function visualize ( bar , height , color ){
+    
+    const { style } = bar;
+    
     setTimeout(() => {
-        bar.style.height = `${height}px`;
-        bar.style.backgroundColor = color;
-    }, (time += delay));
-};
+        style.backgroundColor = color;
+        style.height = `${ height }px`;
+    },time)
+    
+    time += delay;
+}
 
 
 // Randomize array
@@ -249,19 +256,19 @@ SORT.addEventListener("click", () => {
 function bubble_sort() {
     for (let i = 0; i < size - 1; i++){
         for (let j = 0; j < size - i - 1; j++){
-            visual(bars[j], bar_value[j], c_1);
-            visual(bars[j + 1], bar_value[j + 1], c_2);
+            visualize(bars[j], bar_value[j], c_1);
+            visualize(bars[j + 1], bar_value[j + 1], c_2);
             if (bar_value[j] > bar_value[j + 1]){
                 [bar_value[j], bar_value[j + 1]] = [bar_value[j + 1], bar_value[j]];
-                visual(bars[j], bar_value[j], c_2);
-                visual(bars[j + 1], bar_value[j + 1], c_1);
+                visualize(bars[j], bar_value[j], c_2);
+                visualize(bars[j + 1], bar_value[j + 1], c_1);
             }
-            visual(bars[j], bar_value[j], main_color);
-            visual(bars[j + 1], bar_value[j + 1], main_color);
+            visualize(bars[j], bar_value[j], main_color);
+            visualize(bars[j + 1], bar_value[j + 1], main_color);
         }
-        visual(bars[size - 1 - i], bar_value[size - 1 - i], sorted_color);
+        visualize(bars[size - 1 - i], bar_value[size - 1 - i], sorted_color);
     }
-    visual(bars[0], bar_value[0], sorted_color);
+    visualize(bars[0], bar_value[0], sorted_color);
 }
 
 // Selection sort algorithm
@@ -269,35 +276,35 @@ function selection_sort() {
     for (let i = 0; i < size - 1; i++){
         min = i;
         for (let j = size - 1; j > i; j--){
-            visual(bars[j], bar_value[j], c_1);
+            visualize(bars[j], bar_value[j], c_1);
             if (bar_value[j] < bar_value[min]) min = j;
-            visual(bars[j], bar_value[j], main_color);
+            visualize(bars[j], bar_value[j], main_color);
         }
         [bar_value[i], bar_value[min]] = [bar_value[min], bar_value[i]];
-        visual(bars[i], bar_value[i], sorted_color);
-        if (min != i) visual(bars[min], bar_value[min], main_color);
+        visualize(bars[i], bar_value[i], sorted_color);
+        if (min != i) visualize(bars[min], bar_value[min], main_color);
     }
-    visual(bars[size - 1], bar_value[size - 1], sorted_color);
+    visualize(bars[size - 1], bar_value[size - 1], sorted_color);
 }
 
 // Insertion sort algorithm
 function insertion_sort() {
     for (let i = 0; i < size; i++) {
         temp = bar_value[i];
-        visual(bars[i], bar_value[i], c_2);
+        visualize(bars[i], bar_value[i], c_2);
         let j = i - 1;
         for (j = i - 1; j >= 0 && bar_value[j] > temp; j--) {
             bar_value[j + 1] = bar_value[j];
-            visual(bars[j], bar_value[j], c_1);
-            visual(bars[j + 1], bar_value[j + 1], c_2);
-            visual(bars[j + 1], bar_value[j + 1], sorted_color);
-            visual(bars[j], bar_value[j], sorted_color);
+            visualize(bars[j], bar_value[j], c_1);
+            visualize(bars[j + 1], bar_value[j + 1], c_2);
+            visualize(bars[j + 1], bar_value[j + 1], sorted_color);
+            visualize(bars[j], bar_value[j], sorted_color);
         }
         bar_value[j + 1] = temp;
-        visual(bars[i], bar_value[i], c_1);
-        visual(bars[i], bar_value[i], sorted_color);
-        visual(bars[j + 1], bar_value[j + 1], c_2);
-        visual(bars[j + 1], bar_value[j + 1], sorted_color);
+        visualize(bars[i], bar_value[i], c_1);
+        visualize(bars[i], bar_value[i], sorted_color);
+        visualize(bars[j + 1], bar_value[j + 1], c_2);
+        visualize(bars[j + 1], bar_value[j + 1], sorted_color);
     }
 }
 
@@ -306,14 +313,14 @@ function gnome_sort() {
     let index = 0;
     while (index < size) {
         if (bar_value[index] >= bar_value[index - 1] || index == 0){
-            visual(bars[index], bar_value[index], c_1);
-            visual(bars[index], bar_value[index], sorted_color);
+            visualize(bars[index], bar_value[index], c_1);
+            visualize(bars[index], bar_value[index], sorted_color);
             index++;
         }
         else {
             [bar_value[index], bar_value[index - 1]] = [bar_value[index - 1], bar_value[index]]
-            visual(bars[index], bar_value[index], c_2);
-            visual(bars[index + 1], bar_value[index + 1], main_color);
+            visualize(bars[index], bar_value[index], c_2);
+            visualize(bars[index + 1], bar_value[index + 1], main_color);
             index--;
         }
     }
@@ -328,45 +335,45 @@ function cocktail_sort(){
     while (swapped){
         swapped = false;
         for (let i = index; i < lsize - 1; ++i){
-            visual(bars[i], bar_value[i], c_1);
-            visual(bars[i + 1], bar_value[i + 1], c_2);
+            visualize(bars[i], bar_value[i], c_1);
+            visualize(bars[i + 1], bar_value[i + 1], c_2);
             if (bar_value[i] > bar_value[i + 1]){
                 [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
-                visual(bars[i], bar_value[i], c_2);
-                visual(bars[i + 1], bar_value[i + 1], c_1);
+                visualize(bars[i], bar_value[i], c_2);
+                visualize(bars[i + 1], bar_value[i + 1], c_1);
                 swapped = true;
             }
-            visual(bars[i], bar_value[i], main_color);
-            visual(bars[i + 1], bar_value[i + 1], main_color);
+            visualize(bars[i], bar_value[i], main_color);
+            visualize(bars[i + 1], bar_value[i + 1], main_color);
         }
         swapped = false;
         lsize--;
         for (let i = lsize - 1; i >= index; i--) {
-            visual(bars[i], bar_value[i], c_1);
-            visual(bars[i + 1], bar_value[i + 1], c_2);
+            visualize(bars[i], bar_value[i], c_1);
+            visualize(bars[i + 1], bar_value[i + 1], c_2);
             if (bar_value[i] > bar_value[i + 1]) {
                 [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
-                visual(bars[i], bar_value[i], c_2);
-                visual(bars[i + 1], bar_value[i + 1], c_1);
+                visualize(bars[i], bar_value[i], c_2);
+                visualize(bars[i + 1], bar_value[i + 1], c_1);
                 swapped = true;
             }
-            visual(bars[i], bar_value[i], main_color);
-            visual(bars[i + 1], bar_value[i + 1], main_color);
+            visualize(bars[i], bar_value[i], main_color);
+            visualize(bars[i + 1], bar_value[i + 1], main_color);
         }
-        visual(bars[index], bar_value[index++], sorted_color);
-        visual(bars[lsize], bar_value[lsize], sorted_color);
+        visualize(bars[index], bar_value[index++], sorted_color);
+        visualize(bars[lsize], bar_value[lsize], sorted_color);
     }
-    for (let i = 0; i < size; i++)visual(bars[i],bar_value[i],sorted_color)
+    for (let i = 0; i < size; i++)visualize(bars[i],bar_value[i],sorted_color)
 }
 
 // Quick sort algorithm
 function quick_sort(start, end) {
     if (start > end){
-        visual(bars[start], bar_value[start], sorted_color);
+        visualize(bars[start], bar_value[start], sorted_color);
         return;
     }
     if (start == end){
-        visual(bars[start], bar_value[start], sorted_color);
+        visualize(bars[start], bar_value[start], sorted_color);
         return;
     }
     let pivot = bar_value[start];
@@ -374,19 +381,19 @@ function quick_sort(start, end) {
     let tail = end + 1;
     while (head < tail){
         do {
-            visual(bars[head], bar_value[head], c_1);
-            visual(bars[head], bar_value[head], main_color);
+            visualize(bars[head], bar_value[head], c_1);
+            visualize(bars[head], bar_value[head], main_color);
             head++;
         } while (bar_value[head] <= pivot);
         do {
             tail--;
-            visual(bars[tail], bar_value[tail], c_2);
-            visual(bars[tail], bar_value[tail], main_color);
+            visualize(bars[tail], bar_value[tail], c_2);
+            visualize(bars[tail], bar_value[tail], main_color);
         } while (bar_value[tail] > pivot);
         if (head < tail) [bar_value[head], bar_value[tail]] = [bar_value[tail], bar_value[head]];
     }
     [bar_value[start], bar_value[tail]] = [bar_value[tail], bar_value[start]];
-    visual(bars[tail], bar_value[tail], sorted_color);
+    visualize(bars[tail], bar_value[tail], sorted_color);
     quick_sort(start, tail - 1);
     quick_sort(tail + 1, end);
 }
@@ -397,33 +404,33 @@ function heap_sort(){
     for (let i = 0; i < size - 1; i++) {
         let last = size - 1 - i;
         [bar_value[0], bar_value[last]] = [bar_value[last], bar_value[0]];
-        visual(bars[0], bar_value[0], sorted_color);
-        visual(bars[last], bar_value[last], sorted_color);
+        visualize(bars[0], bar_value[0], sorted_color);
+        visualize(bars[last], bar_value[last], sorted_color);
         heap_down(last);
     }
 }
 function heap_up(i){
     let root = Math.floor((i - 1) / 2);
     while (i > 0 && bar_value[root] < bar_value[i]) {
-        visual(bars[i], bar_value[i], c_1);
-        visual(bars[root], bar_value[root], c_2);
+        visualize(bars[i], bar_value[i], c_1);
+        visualize(bars[root], bar_value[root], c_2);
         [bar_value[i], bar_value[root]] = [bar_value[root], bar_value[i]];
-        visual(bars[i], bar_value[i], main_color);
-        visual(bars[root], bar_value[root], main_color);
+        visualize(bars[i], bar_value[i], main_color);
+        visualize(bars[root], bar_value[root], main_color);
         i = root;
         root = Math.floor((i - 1) / 2);
     }
-    visual(bars[i], bar_value[i], main_color);
+    visualize(bars[i], bar_value[i], main_color);
 }
 function heap_down(size){
     let i = 0;
     while (2 * i + 1 < size) {
         let child = 2 * i + 1;
         if (2 * i + 2 < size && bar_value[2 * i + 2] >= bar_value[child]) child = 2 * i + 2;
-        visual(bars[i], bar_value[i], c_1);
-        visual(bars[child], bar_value[child], c_2);
-        visual(bars[i], bar_value[i], main_color);
-        visual(bars[child], bar_value[child], main_color);
+        visualize(bars[i], bar_value[i], c_1);
+        visualize(bars[child], bar_value[child], c_2);
+        visualize(bars[i], bar_value[i], main_color);
+        visualize(bars[child], bar_value[child], main_color);
         if (bar_value[i] >= bar_value[child]) return;
         [bar_value[i], bar_value[child]] = [bar_value[child], bar_value[i]];
         i = child;
