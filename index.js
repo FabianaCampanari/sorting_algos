@@ -128,7 +128,7 @@ function onSizeChange ( event ){
     
     width = 60 / value;
 
-    randomize_array();
+    randomizeValues();
 }
 
 function onSpeedChange ( event ){
@@ -160,28 +160,43 @@ async function sorting_bar (){
 
 
 // Generate random array
-const randomize_array = () => {
+
+function randomizeValues (){
+    
     clearTimeout();
-    enableElement("SORT");
-    enableElement("nav-menu");
-    enableElement("size");
-    enableElement("speed");
-    time = 0;
+    
+    enableElement('nav-menu');
+    enableElement('speed');
+    enableElement('SORT');
+    enableElement('size');
+    
     sorting_progress = 0;
-    elementById("SORT").innerHTML = "Sort";
-    BARS.innerHTML = "";
-    for (let i = 0; i < size; i++){
-        bar_value[i] = randomInt(50, 500);
-        bars[i] = document.createElement("div");
-        bars[i].classList.add("bar");
-        BARS.appendChild(bars[i]);
-        bars[i].style.height = `${bar_value[i]}px`;
-        bars[i].style.width = `${width}%`;
+    time = 0;
+    
+    elementById('SORT').innerText = 'Sort';
+    BARS.innerHTML = '';
+    
+    for ( let i = 0 ; i < size ; i++ ){
+        
+        const 
+            value = randomInt(50,500) ,
+            bar = document.createElement('div') ;
+
+        bar.classList.add('bar');
+        
+        BARS.appendChild(bar);
+        
+        bar.style.height = `${ value }px`;
+        bar.style.width = `${ width }%`;
+        
+        [ bar_value[i] , bars[i] ] = [ value , bar ];
     }
-    stable = document.createElement("div");
-    stable.classList.add("stable");
+    
+    stable = document.createElement('div');
+    stable.classList.add('stable');
+    
     BARS.appendChild(stable);
-};
+}
 
 
 // Style
@@ -201,7 +216,7 @@ const visual = (bar, height, color) => {
 // Randomize array
 
 query('.random-array')
-    .addEventListener('click',randomize_array);
+    .addEventListener('click',randomizeValues);
 
 
 SORT = elementById("SORT");
@@ -416,4 +431,4 @@ function heap_down(size){
 }
 
 // Generate new unsorted array
-randomize_array();
+randomizeValues();
