@@ -226,31 +226,45 @@ query('.random-array')
     .addEventListener('click',randomizeValues);
 
 
-SORT = elementById("SORT");
-SORT.addEventListener("click", () => {
+const Algorithms = {
+    'Selection Sort' : selection_sort ,
+    'Insertion Sort' : insertion_sort ,
+    'Cocktail Sort' : cocktail_sort ,
+    'Bubble Sort' : bubble_sort ,
+    'Gnome Sort' : gnome_sort ,
+    'Quick Sort' : quick_sort ,
+    'Heap Sort' : heap_sort
+}
+
+SORT = elementById('SORT');
+
+SORT.addEventListener('click',() => {
+    
     sorting_progress = 1;
+    
     sorting_bar();
-    disableElement("SORT");
-    disableElement("nav-menu");
-    disableElement("size");
-    disableElement("speed");
-    if (algorithm == "Bubble Sort") bubble_sort();
-    else if (algorithm == "Selection Sort") selection_sort();
-    else if (algorithm == "Insertion Sort") insertion_sort();
-    else if (algorithm == "Gnome Sort") gnome_sort();
-    else if (algorithm == "Cocktail Sort") cocktail_sort();
-    else if (algorithm == "Quick Sort") quick_sort(0, size - 1);
-    else if (algorithm == "Heap Sort") heap_sort();
-    setTimeout(function (){
-        enableElement("SORT");
-        enableElement("nav-menu");
-        enableElement("size");
-        enableElement("speed");
-        elementById("SORT").innerHTML = "Sort";
+    
+    disableElement('nav-menu');
+    disableElement('speed');
+    disableElement('SORT');
+    disableElement('size');
+    
+    Algorithms[algorithm](0,size - 1);
+    
+    setTimeout(() => {
+    
+        enableElement('nav-menu');
+        enableElement('speed');
+        enableElement('SORT');
+        enableElement('size');
+        
+        elementById('SORT').innerText = 'Sort';
+    
         sorting_progress = 0;
         time = 0;
-    }, time);
-});
+    },time);
+})
+
 
 // Bubble sort algorithm
 function bubble_sort() {
