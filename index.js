@@ -140,15 +140,24 @@ function onSpeedChange ( event ){
     
 
 // Progress of the sorting
-async function sorting_bar(){
+
+const AnimationSteps = [ '/' , '-' , '\\' , '|' ];
+
+async function sorting_bar (){
     while (sorting_progress){
-        arr = Array.from(sorting_text);
-        arr[sorting_progress % sorting_text.length] = ["/", "-", "\\", "|"][sorting_progress % 4];
-        elementById("SORT").innerHTML = arr.join("");
+        
+        const chars = [ ... sorting_text ];
+        
+        chars[sorting_progress % sorting_text.length] = AnimationSteps[sorting_progress % 4];
+        
+        elementById('SORT').innerText = chars.join('');
+        
         sorting_progress++;
+        
         await sleep(500);
     }
-};
+}
+
 
 // Generate random array
 const randomize_array = () => {
