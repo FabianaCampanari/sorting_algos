@@ -27,6 +27,10 @@ const hideElement = ( element ) =>
     
 const showElement = ( element ) =>
     element.classList.remove('d-none');
+    
+const swapContent = ( elementA , elementB ) =>
+    [ elementA.innerText , elementB.innerText ] =
+        [ elementB.innerText , elementA.innerText ];
 
 
 // Dark and Light mode switch
@@ -75,15 +79,27 @@ dark.addEventListener('click',switch_to_dark);
 
 
 // Navigation bar
-A = document.getElementsByClassName("dropdown-item");
-algo = "Bubble Sort";
-for (let i = 0; i < A.length; i++){
-    A[i].addEventListener("click", function(){
-        algo = A[i].innerHTML;
-        A[i].innerHTML = elementById("nav-menu").innerHTML;
-        elementById("nav-menu").innerHTML = algo;
-    });
+
+const algorithmSelection = document
+    .getElementsByClassName('dropdown-item');
+    
+const activeSelection = elementById('nav-menu');
+
+
+algorithm = 'Bubble Sort';
+
+for ( const choice of algorithmSelection )
+    choice.addEventListener('click',selectAlgorithm);
+    
+function selectAlgorithm ( event ){
+    
+    const { target } = event;
+    
+    swapContent(target,activeSelection);
+    
+    algorithm = target.innerText;
 }
+
 
 // Sorting bars
 bar_value = [];
@@ -166,13 +182,13 @@ SORT.addEventListener("click", () => {
     disableElement("nav-menu");
     disableElement("size");
     disableElement("speed");
-    if (algo == "Bubble Sort") bubble_sort();
-    else if (algo == "Selection Sort") selection_sort();
-    else if (algo == "Insertion Sort") insertion_sort();
-    else if (algo == "Gnome Sort") gnome_sort();
-    else if (algo == "Cocktail Sort") cocktail_sort();
-    else if (algo == "Quick Sort") quick_sort(0, size - 1);
-    else if (algo == "Heap Sort") heap_sort();
+    if (algorithm == "Bubble Sort") bubble_sort();
+    else if (algorithm == "Selection Sort") selection_sort();
+    else if (algorithm == "Insertion Sort") insertion_sort();
+    else if (algorithm == "Gnome Sort") gnome_sort();
+    else if (algorithm == "Cocktail Sort") cocktail_sort();
+    else if (algorithm == "Quick Sort") quick_sort(0, size - 1);
+    else if (algorithm == "Heap Sort") heap_sort();
     setTimeout(function (){
         enableElement("SORT");
         enableElement("nav-menu");
