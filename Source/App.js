@@ -2,29 +2,33 @@
 import progressAnimation from './ProgressAnimation.js'
 import * as Algorithms from 'Algorithms'
 
-
 const { random , floor } = Math;
 
 
 const randomInt = ( minimum , maximum ) =>
     floor(random() * ( maximum - minimum + 1) + minimum);
     
-const elementById = ( id ) =>
-    document.getElementById(id);
+const byId = ( id ) =>
+    document.getbyId(id);
     
     
 const query = ( selector ) =>
     document.querySelector(selector);
     
+const queryAll = ( selector ) =>
+    document.querySelectorAll(selector);
+    
 const sleep = ( millis ) =>
     new Promise((resolve) => setTimeout(resolve,millis));
 
+const create = ( type ) =>
+    document.createElement(type);
 
 const enableElement = ( id ) =>
-    elementById(id).disabled = false;
+    byId(id).disabled = false;
     
 const disableElement = ( id ) =>
-    elementById(id).disabled = true;
+    byId(id).disabled = true;
     
 const hideElement = ( element ) =>
     element.classList.add('d-none');
@@ -32,22 +36,22 @@ const hideElement = ( element ) =>
 const showElement = ( element ) =>
     element.classList.remove('d-none');
     
-const swapContent = ( elementA , elementB ) =>
+const swapText = ( elementA , elementB ) =>
     [ elementA.innerText , elementB.innerText ] =
         [ elementB.innerText , elementA.innerText ];
 
 
 
 
-const button_sort = elementById('SORT');
+const button_sort = byId('SORT');
 const elements_bars = query('.BARS');
 
 
 // Dark and Light mode switch
 
 const 
-    light = elementById('light') ,
-    dark = elementById('dark') ;
+    light = byId('light') ,
+    dark = byId('dark') ;
 
 
 function switch_to_dark (){
@@ -90,22 +94,20 @@ dark.addEventListener('click',switch_to_dark);
 
 // Navigation bar
 
-const algorithmSelection = document
-    .getElementsByClassName('dropdown-item');
+const algorithmSelection = queryAll('.dropdown-menu > li');
     
-const activeSelection = elementById('nav-menu');
+const activeSelection = byId('nav-menu');
 
 
 let algorithm = 'Bubble Sort';
 
-for ( const choice of algorithmSelection )
-    choice.addEventListener('click',selectAlgorithm);
+
     
 function selectAlgorithm ( event ){
     
     const { target } = event;
     
-    swapContent(target,activeSelection);
+    swapText(target,activeSelection);
     
     algorithm = activeSelection.innerText;
 }
@@ -133,11 +135,7 @@ const delayFrom = ( factor ) =>
 let delay = delayFrom(500);
 
 
-elementById('size')
-    .addEventListener('input',onSizeChange);
 
-elementById('speed')
-    .addEventListener('input',onSpeedChange);
     
 
 function onSizeChange ( event ){
@@ -169,13 +167,12 @@ function animateSorting (){
 }
 
 
-// Generate random array
-
 async function randomizeValues (){
     
     cancel = true;
     
     await sortingProcess;
+    
     clearInterval(animation);
     
     enableElement('nav-menu');
@@ -188,29 +185,39 @@ async function randomizeValues (){
     elements_bars.innerHTML = '';
     button_sort.innerText = 'Sort';
     
-    for ( let i = 0 ; i < size ; i++ ){
-        
-        const 
-            value = randomInt(50,500) ,
-            bar = document.createElement('div') ;
+    bars = [];
+    bar_value = [];
+    
+    prepareBars();
+}
 
-        bar.classList.add('bar');
-        
-        elements_bars.appendChild(bar);
-        
-        bar.style.height = `${ value }px`;
-        bar.style.width = `${ width }%`;
-        
-        [ bar_value[i] , bars[i] ] = [ value , bar ];
-    }
+
+function prepareBars (){
     
-    const stable = document.createElement('div');
+    for ( let i = 0 ; i < size ; i++ )
+        generateBar();
+    
+    const stable = create('div');
     stable.classList.add('stable');
-    
     elements_bars.appendChild(stable);
 }
 
 
+function generateBar (){
+    
+    const 
+        value = randomInt(50,500) ,
+        bar = create('div') ;
+    
+    const { style } = bar;
+    
+    style.height = `${ value }px`;
+    style.width = `${ width }%`;
+    
+    elements_bars.appendChild(bar);
+    bar_value.push(value);
+    bars.push(bar);
+}
 
 function visualize ( index , color ){
     return new Promise((resolve) => {
@@ -234,15 +241,9 @@ function visualize ( index , color ){
 }
 
 
-query('.random-array')
-    .addEventListener('click',randomizeValues);
-
-
-
-button_sort.addEventListener('click',() => {
+function prepareSorting (){
     sortingProcess = sortValues();
-})
-
+}
 
 async function sortValues (){
         
@@ -278,5 +279,19 @@ async function sortValues (){
 }
 
 
+
+for ( const choice of algorithmSelection )
+    choice.addEventListener('click',selectAlgorithm);
+
+query('.random-array')
+    .addEventListener('click',randomizeValues);
+
+byId('size')
+    .addEventListener('input',onSizeChange);
+
+byId('speed')
+    .addEventListener('input',onSpeedChange);
+
+button_sort.addEventListener('click',prepareSorting);
 
 randomizeValues();
