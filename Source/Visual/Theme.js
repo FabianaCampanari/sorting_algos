@@ -8,7 +8,7 @@ const { values } = Object;
 const sheets = values(document.styleSheets);
 
 const findSheet = ( name ) => 
-    sheets.find((sheet) => sheet.href.endsWith(`${ name }.css`));
+    sheets.find((sheet) => sheet.href?.endsWith(`${ name }.css`));
 
 
 const 
