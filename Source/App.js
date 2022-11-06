@@ -2,40 +2,17 @@
 import progressAnimation from './ProgressAnimation.js'
 import * as Algorithms from 'Algorithms'
 
+import { queryAll , query , create , byId } from './Document.js'
+
 const { random , floor } = Math;
 
 
 const randomInt = ( minimum , maximum ) =>
     floor(random() * ( maximum - minimum + 1) + minimum);
     
-const byId = ( id ) =>
-    document.getbyId(id);
-    
-    
-const query = ( selector ) =>
-    document.querySelector(selector);
-    
-const queryAll = ( selector ) =>
-    document.querySelectorAll(selector);
-    
 const sleep = ( millis ) =>
     new Promise((resolve) => setTimeout(resolve,millis));
 
-const create = ( type ) =>
-    document.createElement(type);
-
-const enableElement = ( id ) =>
-    byId(id).disabled = false;
-    
-const disableElement = ( id ) =>
-    byId(id).disabled = true;
-    
-const hideElement = ( element ) =>
-    element.classList.add('d-none');
-    
-const showElement = ( element ) =>
-    element.classList.remove('d-none');
-    
 const swapText = ( elementA , elementB ) =>
     [ elementA.innerText , elementB.innerText ] =
         [ elementB.innerText , elementA.innerText ];
@@ -47,49 +24,7 @@ const button_sort = byId('SORT');
 const elements_bars = query('.BARS');
 
 
-// Dark and Light mode switch
 
-const 
-    light = byId('light') ,
-    dark = byId('dark') ;
-
-
-function switch_to_dark (){
-    
-    showElement(light);
-    hideElement(dark);
-    
-    document.body.style.backgroundColor = '#212529';
-    document.body.style.color = '#fff';
-    
-    const { style } = document.documentElement;
-    
-    style.setProperty('--sort-btn-background-color','#212529');
-    style.setProperty('--bar-background-color','#f5f5f5');
-    style.setProperty('--source-code-color','#00ffff');
-    style.setProperty('--sort-btn-color','#f5f5f5');
-    style.setProperty('--shadow-color', "#888888");
-}
-
-function swith_to_light (){
-    
-    hideElement(light);
-    showElement(dark);
-    
-    document.body.style.backgroundColor = '#f5f5f5';
-    document.body.style.color = '#000';
-    
-    const { style } = document.documentElement;
-    
-    style.setProperty('--sort-btn-background-color','#f5f5f5');
-    style.setProperty('--bar-background-color','#212529');
-    style.setProperty('--source-code-color','#000000');
-    style.setProperty('--sort-btn-color','#212529');
-    style.setProperty('--shadow-color','#212529');
-}
-
-light.addEventListener('click',swith_to_light);
-dark.addEventListener('click',switch_to_dark);
 
 
 // Navigation bar
@@ -175,9 +110,9 @@ async function randomizeValues (){
     
     clearInterval(animation);
     
-    enableElement('nav-menu');
-    enableElement('SORT');
-    enableElement('size');
+    byId('nav-menu').enable();
+    byId('SORT').enable();
+    byId('size').enable();
     
     sorting_progress = 0;
     time = 0;
@@ -252,9 +187,9 @@ async function sortValues (){
     
     animateSorting();
     
-    disableElement('nav-menu');
-    disableElement('SORT');
-    disableElement('size');
+    byId('nav-menu').disable();
+    byId('SORT').disable();
+    byId('size').disable();
     
     const process = Algorithms[algorithm](size,bar_value,0,size - 1);
     
@@ -266,9 +201,9 @@ async function sortValues (){
             break;
     }
     
-    enableElement('nav-menu');
-    enableElement('SORT');
-    enableElement('size');
+    byId('nav-menu').enable();
+    byId('SORT').enable();
+    byId('size').enable();
     
     clearInterval(animation);
     
