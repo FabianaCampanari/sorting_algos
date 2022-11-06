@@ -108,8 +108,10 @@ function selectAlgorithm ( event ){
 
 let
     sorting_progress = 0 ,
+    sortingProcess ,
     sorting_text = 'Sorting' ,
     bar_value = [] ,
+    cancel = false ,
     width = 2 ,
     BARS = query('.BARS') ,
     bars = [] ,
@@ -165,9 +167,10 @@ async function sorting_bar (){
 
 // Generate random array
 
-function randomizeValues (){
+async function randomizeValues (){
     
-    clearTimeout();
+    cancel = true;
+    await sortingProcess;
     
     enableElement('nav-menu');
     enableElement('SORT');
@@ -231,9 +234,15 @@ query('.random-array')
 
 const SORT = elementById('SORT');
 
-SORT.addEventListener('click',async () => {
-    
+SORT.addEventListener('click',() => {
+    sortingProcess = sortValues();
+})
+
+
+async function sortValues (){
+        
     sorting_progress = 1;
+    cancel = false;
     
     sorting_bar();
     
@@ -243,8 +252,13 @@ SORT.addEventListener('click',async () => {
     
     const process = Algorithms[algorithm](size,bar_value,0,size - 1);
     
-    for ( const [ color , index ] of process )
+    for ( const [ color , index ] of process ){
+        
         await visualize(index,color);
+        
+        if(cancel)
+            break;
+    }
     
     enableElement('nav-menu');
     enableElement('SORT');
@@ -254,7 +268,7 @@ SORT.addEventListener('click',async () => {
 
     sorting_progress = 0;
     time = 0;
-})
+}
 
 
 // Generate new unsorted array
