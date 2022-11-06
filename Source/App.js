@@ -13,13 +13,6 @@ const randomInt = ( minimum , maximum ) =>
 const sleep = ( millis ) =>
     new Promise((resolve) => setTimeout(resolve,millis));
 
-const swapText = ( elementA , elementB ) =>
-    [ elementA.innerText , elementB.innerText ] =
-        [ elementB.innerText , elementA.innerText ];
-
-
-
-
 
 let
     sorting_progress = 0 ,
@@ -58,7 +51,7 @@ function onAlgorithmSelect ( event ){
     
     const { target } = event;
     
-    swapText(target,activeSelection);
+    target.swapTextWith(activeSelection);
     
     algorithm = activeSelection.innerText;
 }

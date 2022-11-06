@@ -23,3 +23,9 @@ Element.enable = function (){
 Element.disable = function (){
     this.disabled = true;
 }
+
+
+Element.swapTextWith = function ( other ){
+    [ this.innerText , other.innerText ] =
+        [ other.innerText , this.innerText ];
+}
