@@ -1,4 +1,7 @@
 
+
+
+
 const { random , floor } = Math;
 
 
@@ -86,7 +89,7 @@ const algorithmSelection = document
 const activeSelection = elementById('nav-menu');
 
 
-algorithm = 'Bubble Sort';
+let algorithm = 'Bubble Sort';
 
 for ( const choice of algorithmSelection )
     choice.addEventListener('click',selectAlgorithm);
@@ -104,6 +107,7 @@ function selectAlgorithm ( event ){
 // Sorting bars
 
 let
+    sorting_progress = 0 ,
     sorting_text = 'Sorting' ,
     bar_value = [] ,
     width = 2 ,
@@ -192,7 +196,7 @@ function randomizeValues (){
         [ bar_value[i] , bars[i] ] = [ value , bar ];
     }
     
-    stable = document.createElement('div');
+    const stable = document.createElement('div');
     stable.classList.add('stable');
     
     BARS.appendChild(stable);
@@ -201,10 +205,11 @@ function randomizeValues (){
 
 // Style
 
-sorted_color = '#3CB371';
-main_color = '#DC143C';
-c_1 = '#FFFF00';
-c_2 = '#0096FF';
+const
+    sorted_color = '#3CB371' ,
+    main_color = '#DC143C' ,
+    c_1 = '#FFFF00' ,
+    c_2 = '#0096FF' ;
 
 
 function visualize ( index , color ){
@@ -238,7 +243,7 @@ const Algorithms = {
     'Heap Sort' : heap_sort
 }
 
-SORT = elementById('SORT');
+const SORT = elementById('SORT');
 
 SORT.addEventListener('click',() => {
     
