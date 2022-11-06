@@ -21,7 +21,6 @@ let
     bar_value = [] ,
     cancel = false ,
     animation ,
-    width = 2 ,
     bars = [] ,
     size = 35 ,
     time = 0 ;
@@ -58,11 +57,7 @@ function onAlgorithmSelect ( event ){
 
 
 function onSizeChange ( event ){
-    
-    const { value } = event.target;
-    
-    width = 60 / value;
-
+    size = event.target.value;
     randomizeValues();
 }
 
@@ -129,7 +124,7 @@ function generateBar (){
     const { style } = bar;
     
     style.height = `${ value }px`;
-    style.width = `${ width }%`;
+    style.width = `${ 60 / size }%`;
     
     elements_bars.appendChild(bar);
     bar_value.push(value);
