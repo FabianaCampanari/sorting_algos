@@ -1,6 +1,6 @@
 
-import { queryAll , query , create , byId } from './Document.js'
-import progressAnimation from './ProgressAnimation.js'
+import { queryAll , query , create , byId } from 'Document'
+import progressAnimation from 'Progress'
 import * as Algorithms from 'Algorithms'
 
 

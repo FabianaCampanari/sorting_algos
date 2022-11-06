@@ -1,5 +1,5 @@
 
-import { byId } from './Document.js'
+import { byId } from 'Document'
 
 
 const { values } = Object;
