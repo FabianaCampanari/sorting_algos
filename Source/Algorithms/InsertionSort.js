@@ -1,9 +1,5 @@
 
-const 
-    sorted_color = '#3CB371',
-    main_color = '#DC143C',
-    c_1 = '#FFFF00',
-    c_2 = '#0096FF';
+import { Sorted , Alpha , Beta } from '../Colors.js'
 
 
 export default function * ( size , bar_value ){
@@ -12,7 +8,7 @@ export default function * ( size , bar_value ){
         
         let temp = bar_value[i];
         
-        yield [ c_2 , i ]
+        yield [ Beta , i ]
         
         let j = i - 1;
 
@@ -20,17 +16,17 @@ export default function * ( size , bar_value ){
             
             bar_value[j + 1] = bar_value[j];
             
-            yield [ c_1 , j ]
-            yield [ c_2 , j + 1 ]
-            yield [ sorted_color , j + 1 ]
-            yield [ sorted_color , j ]
+            yield [ Alpha , j ]
+            yield [ Beta , j + 1 ]
+            yield [ Sorted , j + 1 ]
+            yield [ Sorted , j ]
         }
         
         bar_value[j + 1] = temp;
         
-        yield [ c_2 , i ]
-        yield [ sorted_color , i ]
-        yield [ c_2 , j + 1 ]
-        yield [ sorted_color , j + 1 ]
+        yield [ Beta , i ]
+        yield [ Sorted , i ]
+        yield [ Beta , j + 1 ]
+        yield [ Sorted , j + 1 ]
     }
 }

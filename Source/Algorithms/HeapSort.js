@@ -1,11 +1,7 @@
 
-const { floor } = Math;
+import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
 
-const 
-    sorted_color = '#3CB371',
-    main_color = '#DC143C',
-    c_1 = '#FFFF00',
-    c_2 = '#0096FF';
+const { floor } = Math;
 
 
 export default function * ( size , bar_value ){
@@ -19,8 +15,8 @@ export default function * ( size , bar_value ){
         
         [ bar_value[0] , bar_value[last] ] = [ bar_value[last] , bar_value[0] ];
         
-        yield [ sorted_color , 0 ]
-        yield [ sorted_color , last ]
+        yield [ Sorted , 0 ]
+        yield [ Sorted , last ]
         
         yield * heap_down(bar_value,last);
     }
@@ -33,20 +29,20 @@ function * heap_up ( size , bar_value , i ){
     
     while ( i > 0 && bar_value[root] < bar_value[i]){
         
-        yield [ c_1 , i ]
-        yield [ c_2 , root ]
+        yield [ Alpha , i ]
+        yield [ Beta , root ]
         
         [ bar_value[i] , bar_value[root] ] = [ bar_value[root] , bar_value[i] ];
         
-        yield [ main_color , i ]
-        yield [ main_color , root ]
+        yield [ Unsorted , i ]
+        yield [ Unsorted , root ]
 
         i = root;
         
         root = floor((i - 1) / 2);
     }
 
-    yield [ main_color , i ]
+    yield [ Unsorted , i ]
 }
 
 function * heap_down ( bar_value , size ){
@@ -60,10 +56,10 @@ function * heap_down ( bar_value , size ){
         if(2 * i + 2 < size && bar_value[2 * i + 2] >= bar_value[child])
             child = 2 * i + 2;
         
-        yield [ c_1 , i ]
-        yield [ c_2 , child ]
-        yield [ main_color , i ]
-        yield [ main_color , child ]
+        yield [ Alpha , i ]
+        yield [ Beta , child ]
+        yield [ Unsorted , i ]
+        yield [ Unsorted , child ]
         
         if(bar_value[i] >= bar_value[child])
             return

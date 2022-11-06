@@ -1,20 +1,16 @@
 
-const 
-    sorted_color = '#3CB371',
-    main_color = '#DC143C',
-    c_1 = '#FFFF00',
-    c_2 = '#0096FF';
+import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
 
 
 export default function * sort ( size , bar_value , start , end ){
     
     if(start > end){
-        yield [ sorted_color , start ]
+        yield [ Sorted , start ]
         return
     }
     
     if(start == end){
-        yield [ sorted_color , start ]
+        yield [ Sorted , start ]
         return
     }
     
@@ -26,8 +22,8 @@ export default function * sort ( size , bar_value , start , end ){
         
         do {
 
-            yield [ c_1 , head ]
-            yield [ main_color , head ]
+            yield [ Alpha , head ]
+            yield [ Unsorted , head ]
 
             head++;
 
@@ -37,8 +33,8 @@ export default function * sort ( size , bar_value , start , end ){
 
             tail--;
 
-            yield [ c_2 , tail ]
-            yield [ main_color , tail ]
+            yield [ Beta , tail ]
+            yield [ Unsorted , tail ]
 
         } while (bar_value[tail] > pivot);
         
@@ -48,7 +44,7 @@ export default function * sort ( size , bar_value , start , end ){
     
     [ bar_value[start] , bar_value[tail] ] = [ bar_value[tail] , bar_value[start] ];
     
-    yield [ sorted_color , tail ]
+    yield [ Sorted , tail ]
     
     yield * sort(size,bar_value,start,tail - 1);
     yield * sort(size,bar_value,tail + 1, end);

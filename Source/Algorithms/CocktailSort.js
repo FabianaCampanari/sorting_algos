@@ -1,9 +1,5 @@
 
-const 
-    sorted_color = '#3CB371',
-    main_color = '#DC143C',
-    c_1 = '#FFFF00',
-    c_2 = '#0096FF';
+import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
 
 
 export default function * ( size , bar_value ){
@@ -19,21 +15,21 @@ export default function * ( size , bar_value ){
         
         for ( let i = index ; i < lsize - 1 ; ++i ){
             
-            yield [ c_1 , i ]
-            yield [ c_2 , i + 1 ]
+            yield [ Alpha , i ]
+            yield [ Beta , i + 1 ]
             
             if(bar_value[i] > bar_value[i + 1]){
                 
                 [ bar_value[i] , bar_value[i + 1] ] = [ bar_value[i + 1] , bar_value[i] ];
                 
-                yield [ c_2 , i ]
-                yield [ c_1 , i + 1 ]
+                yield [ Beta , i ]
+                yield [ Alpha , i + 1 ]
                 
                 swapped = true;
             }
             
-            yield [ main_color , i ]
-            yield [ main_color , i + 1 ]
+            yield [ Unsorted , i ]
+            yield [ Unsorted , i + 1 ]
         }
         
         swapped = false;
@@ -41,30 +37,30 @@ export default function * ( size , bar_value ){
         
         for ( let i = lsize - 1 ; i >= index ; i--){
             
-            yield [ c_1 , i ]
-            yield [ c_2 , i + 1 ]
+            yield [ Alpha , i ]
+            yield [ Beta , i + 1 ]
 
             if(bar_value[i] > bar_value[i + 1]){
                 
                 [ bar_value[i] , bar_value[i + 1] ] = [ bar_value[i + 1] , bar_value[i] ];
                 
-                yield [ c_2 , i ]
-                yield [ c_1 , i + 1 ]
+                yield [ Beta , i ]
+                yield [ Alpha , i + 1 ]
 
                 swapped = true;
             }
 
-            yield [ main_color , i ]
-            yield [ main_color , i + 1 ]
+            yield [ Unsorted , i ]
+            yield [ Unsorted , i + 1 ]
         }
 
-        yield [ sorted_color , index ]
+        yield [ Sorted , index ]
         
         index++
         
-        yield [ sorted_color , lsize ]
+        yield [ Sorted , lsize ]
     }
 
     for( let i = 0 ; i < size ; i++ )
-        yield [ sorted_color , i ]
+        yield [ Sorted , i ]
 }

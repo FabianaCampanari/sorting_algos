@@ -1,12 +1,5 @@
 
-
-import selectionSort from './Algorithms/SelectionSort.js'
-import insertionSort from './Algorithms/InsertionSort.js'
-import cocktailSort from './Algorithms/CocktailSort.js'
-import bubbleSort from './Algorithms/BubbleSort.js'
-import gnomeSort from './Algorithms/GnomeSort.js'
-import quickSort from './Algorithms/QuickSort.js'
-import heapSort from './Algorithms/HeapSort.js'
+import * as Algorithms from 'Algorithms'
 
 
 const { random , floor } = Math;
@@ -246,16 +239,16 @@ function visualize ( index , color ){
 query('.random-array')
     .addEventListener('click',randomizeValues);
 
-
-const Algorithms = {
-    'Selection Sort' : selectionSort ,
-    'Insertion Sort' : insertionSort ,
-    'Cocktail Sort' : cocktailSort ,
-    'Bubble Sort' : bubbleSort ,
-    'Gnome Sort' : gnomeSort ,
-    'Quick Sort' : quickSort ,
-    'Heap Sort' : heapSort
-}
+// 
+// const Algorithms = {
+//     'Selection Sort' : selectionSort ,
+//     'Insertion Sort' : insertionSort ,
+//     'Cocktail Sort' : cocktailSort ,
+//     'Bubble Sort' : bubbleSort ,
+//     'Gnome Sort' : gnomeSort ,
+//     'Quick Sort' : quickSort ,
+//     'Heap Sort' : heapSort
+// }
 
 const SORT = elementById('SORT');
 

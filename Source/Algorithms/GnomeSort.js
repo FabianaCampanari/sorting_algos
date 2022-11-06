@@ -1,9 +1,5 @@
 
-const 
-    sorted_color = '#3CB371',
-    main_color = '#DC143C',
-    c_1 = '#FFFF00',
-    c_2 = '#0096FF';
+import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
 
 
 export default function * ( size , bar_value ){
@@ -14,8 +10,8 @@ export default function * ( size , bar_value ){
         
         if(bar_value[index] >= bar_value[index - 1] || index == 0){
 
-            yield [ c_1 , index ]
-            yield [ sorted_color , index ]
+            yield [ Alpha , index ]
+            yield [ Sorted , index ]
 
             index++;
 
@@ -23,8 +19,8 @@ export default function * ( size , bar_value ){
 
             [ bar_value[index] , bar_value[index - 1] ] = [ bar_value[index - 1] , bar_value[index] ];
 
-            yield [ c_2 , index ]
-            yield [ main_color , index + 1 ]
+            yield [ Beta , index ]
+            yield [ Unsorted , index + 1 ]
 
             index--;
         }
