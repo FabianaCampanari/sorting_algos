@@ -1,8 +1,8 @@
 
+import { queryAll , query , create , byId } from './Document.js'
 import progressAnimation from './ProgressAnimation.js'
 import * as Algorithms from 'Algorithms'
 
-import { queryAll , query , create , byId } from './Document.js'
 
 const { random , floor } = Math;
 
@@ -20,39 +20,11 @@ const swapText = ( elementA , elementB ) =>
 
 
 
-const button_sort = byId('SORT');
-const elements_bars = query('.BARS');
-
-
-
-
-
-// Navigation bar
-
-const algorithmSelection = queryAll('.dropdown-menu > li');
-    
-const activeSelection = byId('nav-menu');
-
-
-let algorithm = 'Bubble Sort';
-
-
-    
-function selectAlgorithm ( event ){
-    
-    const { target } = event;
-    
-    swapText(target,activeSelection);
-    
-    algorithm = activeSelection.innerText;
-}
-
-
-// Sorting bars
 
 let
     sorting_progress = 0 ,
     sortingProcess ,
+    algorithm = 'Bubble Sort' ,
     bar_value = [] ,
     cancel = false ,
     animation ,
@@ -62,16 +34,35 @@ let
     time = 0 ;
 
 
-
 const delayFrom = ( factor ) =>
     10000 / (floor(size / 10) * factor);
     
-
 let delay = delayFrom(500);
 
 
+const algorithmSelection = 
+    queryAll('.dropdown-menu > li');
+    
+const activeSelection =
+    byId('nav-menu');
+
+const elements_bars = 
+    query('.BARS');
+
+const button_sort = 
+    byId('SORT');
+
 
     
+function onAlgorithmSelect ( event ){
+    
+    const { target } = event;
+    
+    swapText(target,activeSelection);
+    
+    algorithm = activeSelection.innerText;
+}
+
 
 function onSizeChange ( event ){
     
@@ -110,9 +101,7 @@ async function randomizeValues (){
     
     clearInterval(animation);
     
-    byId('nav-menu').enable();
-    byId('SORT').enable();
-    byId('size').enable();
+    disableNavigation(false);
     
     sorting_progress = 0;
     time = 0;
@@ -154,44 +143,44 @@ function generateBar (){
     bars.push(bar);
 }
 
-function visualize ( index , color ){
-    return new Promise((resolve) => {
+async function visualize ( index , color ){
         
-        const [ value , bar ] = [ bar_value[index] , bars[index] ];
+    const [ value , bar ] = [ bar_value[index] , bars[index] ];
+    
+    if(bar){
         
-        if(bar){
-            
-            const { style } = bar;
-            
-            setTimeout(() => {
-                style.backgroundColor = color;
-                style.height = `${ value }px`;
-                resolve();
-            },delay)
-            
-        } else {
-            resolve();
-        }
-    })
+        await sleep(delay);
+        
+        const { style } = bar;
+                
+        style.backgroundColor = color;
+        style.height = `${ value }px`;
+    }
 }
 
 
-function prepareSorting (){
-    sortingProcess = sortValues();
+function disableNavigation ( state ){
+    byId('nav-menu').disabled = state;
+    byId('SORT').disabled = state;
+    byId('size').disabled = state;
 }
 
-async function sortValues (){
+
+function onStartSorting (){
+    sortingProcess = sort();
+}
+
+async function sort (){
         
     sorting_progress = 1;
     cancel = false;
     
+    disableNavigation(true);
     animateSorting();
     
-    byId('nav-menu').disable();
-    byId('SORT').disable();
-    byId('size').disable();
+    const parameters = [ size , bar_value , 0 , size - 1 ]
     
-    const process = Algorithms[algorithm](size,bar_value,0,size - 1);
+    const process = Algorithms[algorithm]( ... parameters );
     
     for ( const [ color , index ] of process ){
         
@@ -201,9 +190,7 @@ async function sortValues (){
             break;
     }
     
-    byId('nav-menu').enable();
-    byId('SORT').enable();
-    byId('size').enable();
+    disableNavigation(false);
     
     clearInterval(animation);
     
@@ -216,17 +203,19 @@ async function sortValues (){
 
 
 for ( const choice of algorithmSelection )
-    choice.addEventListener('click',selectAlgorithm);
+    choice.addEventListener('click',onAlgorithmSelect);
 
 query('.random-array')
     .addEventListener('click',randomizeValues);
 
-byId('size')
-    .addEventListener('input',onSizeChange);
-
 byId('speed')
     .addEventListener('input',onSpeedChange);
 
-button_sort.addEventListener('click',prepareSorting);
+byId('size')
+    .addEventListener('input',onSizeChange);
+
+button_sort
+    .addEventListener('click',onStartSorting);
+
 
 randomizeValues();
