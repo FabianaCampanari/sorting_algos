@@ -2,7 +2,7 @@
 import { Sorted , Unsorted , Alpha , Beta } from 'Colors'
 
 
-export default function * ( size , bar_value ){
+export default function * ( size , items ){
     
     for( let i = 0 ; i < size - 1 ; i++ ){
         
@@ -11,9 +11,9 @@ export default function * ( size , bar_value ){
             yield [ Alpha , j ]
             yield [ Beta , j + 1 ]
             
-            if(bar_value[j] > bar_value[j + 1]){
+            if(items[j] > items[j + 1]){
                 
-                [ bar_value[j] , bar_value[j + 1] ] = [ bar_value[j + 1] , bar_value[j] ];
+                [ items[j] , items[j + 1] ] = [ items[j + 1] , items[j] ];
                 
                 yield [ Beta , j ]
                 yield [ Alpha , j + 1 ]

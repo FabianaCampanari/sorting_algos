@@ -1,8 +1,8 @@
 
-import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
+import { Sorted , Unsorted , Alpha , Beta } from 'Colors'
 
 
-export default function * sort ( size , bar_value , start , end ){
+export default function * sort ( size , items , start , end ){
     
     if(start > end){
         yield [ Sorted , start ]
@@ -14,7 +14,7 @@ export default function * sort ( size , bar_value , start , end ){
         return
     }
     
-    let pivot = bar_value[start] ,
+    let pivot = items[start] ,
         tail = end + 1 ,
         head = start ;
     
@@ -27,7 +27,7 @@ export default function * sort ( size , bar_value , start , end ){
 
             head++;
 
-        } while (bar_value[head] <= pivot);
+        } while (items[head] <= pivot);
         
         do {
 
@@ -36,16 +36,16 @@ export default function * sort ( size , bar_value , start , end ){
             yield [ Beta , tail ]
             yield [ Unsorted , tail ]
 
-        } while (bar_value[tail] > pivot);
+        } while (items[tail] > pivot);
         
         if(head < tail)
-            [ bar_value[head] , bar_value[tail] ] = [ bar_value[tail] , bar_value[head] ];
+            [ items[head] , items[tail] ] = [ items[tail] , items[head] ];
     }
     
-    [ bar_value[start] , bar_value[tail] ] = [ bar_value[tail] , bar_value[start] ];
+    [ items[start] , items[tail] ] = [ items[tail] , items[start] ];
     
     yield [ Sorted , tail ]
     
-    yield * sort(size,bar_value,start,tail - 1);
-    yield * sort(size,bar_value,tail + 1, end);
+    yield * sort(size,items,start,tail - 1);
+    yield * sort(size,items,tail + 1, end);
 }

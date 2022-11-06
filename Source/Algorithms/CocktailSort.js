@@ -1,8 +1,8 @@
 
-import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
+import { Sorted , Unsorted , Alpha , Beta } from 'Colors'
 
 
-export default function * ( size , bar_value ){
+export default function * ( size , items ){
     
     let 
         swapped = true ,
@@ -18,9 +18,9 @@ export default function * ( size , bar_value ){
             yield [ Alpha , i ]
             yield [ Beta , i + 1 ]
             
-            if(bar_value[i] > bar_value[i + 1]){
+            if(items[i] > items[i + 1]){
                 
-                [ bar_value[i] , bar_value[i + 1] ] = [ bar_value[i + 1] , bar_value[i] ];
+                [ items[i] , items[i + 1] ] = [ items[i + 1] , items[i] ];
                 
                 yield [ Beta , i ]
                 yield [ Alpha , i + 1 ]
@@ -40,9 +40,9 @@ export default function * ( size , bar_value ){
             yield [ Alpha , i ]
             yield [ Beta , i + 1 ]
 
-            if(bar_value[i] > bar_value[i + 1]){
+            if(items[i] > items[i + 1]){
                 
-                [ bar_value[i] , bar_value[i + 1] ] = [ bar_value[i + 1] , bar_value[i] ];
+                [ items[i] , items[i + 1] ] = [ items[i + 1] , items[i] ];
                 
                 yield [ Beta , i ]
                 yield [ Alpha , i + 1 ]

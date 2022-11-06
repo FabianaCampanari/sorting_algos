@@ -1,38 +1,38 @@
 
-import { Sorted , Unsorted , Alpha , Beta } from '../Colors.js'
+import { Sorted , Unsorted , Alpha , Beta } from 'Colors'
 
 const { floor } = Math;
 
 
-export default function * ( size , bar_value ){
+export default function * ( size , items ){
     
     for ( let i = 0 ; i < size ; i++ )
-        yield * heap_up(size,bar_value,i);
+        yield * heap_up(size,items,i);
     
     for ( let i = 0 ; i < size - 1 ; i++){
         
         let last = size - 1 - i;
         
-        [ bar_value[0] , bar_value[last] ] = [ bar_value[last] , bar_value[0] ];
+        [ items[0] , items[last] ] = [ items[last] , items[0] ];
         
         yield [ Sorted , 0 ]
         yield [ Sorted , last ]
         
-        yield * heap_down(bar_value,last);
+        yield * heap_down(items,last);
     }
 }
 
 
-function * heap_up ( size , bar_value , i ){
+function * heap_up ( size , items , i ){
     
     let root = floor((i - 1) / 2);
     
-    while ( i > 0 && bar_value[root] < bar_value[i]){
+    while ( i > 0 && items[root] < items[i]){
         
         yield [ Alpha , i ]
         yield [ Beta , root ]
         
-        [ bar_value[i] , bar_value[root] ] = [ bar_value[root] , bar_value[i] ];
+        [ items[i] , items[root] ] = [ items[root] , items[i] ];
         
         yield [ Unsorted , i ]
         yield [ Unsorted , root ]
@@ -45,7 +45,7 @@ function * heap_up ( size , bar_value , i ){
     yield [ Unsorted , i ]
 }
 
-function * heap_down ( bar_value , size ){
+function * heap_down ( items , size ){
     
     let i = 0;
     
@@ -53,7 +53,7 @@ function * heap_down ( bar_value , size ){
         
         let child = 2 * i + 1;
         
-        if(2 * i + 2 < size && bar_value[2 * i + 2] >= bar_value[child])
+        if(2 * i + 2 < size && items[2 * i + 2] >= items[child])
             child = 2 * i + 2;
         
         yield [ Alpha , i ]
@@ -61,10 +61,10 @@ function * heap_down ( bar_value , size ){
         yield [ Unsorted , i ]
         yield [ Unsorted , child ]
         
-        if(bar_value[i] >= bar_value[child])
+        if(items[i] >= items[child])
             return
         
-        [ bar_value[i] , bar_value[child] ] = [ bar_value[child] , bar_value[i] ];
+        [ items[i] , items[child] ] = [ items[child] , items[i] ];
         
         i = child;
     }
