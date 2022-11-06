@@ -1,5 +1,12 @@
 
 
+import selectionSort from './Algorithms/SelectionSort.js'
+import insertionSort from './Algorithms/InsertionSort.js'
+import cocktailSort from './Algorithms/CocktailSort.js'
+import bubbleSort from './Algorithms/BubbleSort.js'
+import gnomeSort from './Algorithms/GnomeSort.js'
+import quickSort from './Algorithms/QuickSort.js'
+import heapSort from './Algorithms/HeapSort.js'
 
 
 const { random , floor } = Math;
@@ -20,10 +27,10 @@ const sleep = ( millis ) =>
 
 
 const enableElement = ( id ) =>
-    elementById(id).disable = false;
+    elementById(id).disabled = false;
     
 const disableElement = ( id ) =>
-    elementById(id).disable = true;
+    elementById(id).disabled = true;
     
 const hideElement = ( element ) =>
     element.classList.add('d-none');
@@ -100,7 +107,7 @@ function selectAlgorithm ( event ){
     
     swapContent(target,activeSelection);
     
-    algorithm = target.innerText;
+    algorithm = activeSelection.innerText;
 }
 
 
@@ -170,7 +177,7 @@ function randomizeValues (){
     clearTimeout();
     
     enableElement('nav-menu');
-    enableElement('speed');
+    // enableElement('speed');
     enableElement('SORT');
     enableElement('size');
     
@@ -213,17 +220,24 @@ const
 
 
 function visualize ( index , color ){
-    
-    const [ value , bar ] = [ bar_value[index] , bars[index] ];
-    
-    const { style } = bar;
-    
-    setTimeout(() => {
-        style.backgroundColor = color;
-        style.height = `${ value }px`;
-    },time)
-    
-    time += delay;
+    return new Promise((resolve) => {
+        
+        const [ value , bar ] = [ bar_value[index] , bars[index] ];
+        
+        if(bar){
+            
+            const { style } = bar;
+            
+            setTimeout(() => {
+                style.backgroundColor = color;
+                style.height = `${ value }px`;
+                resolve();
+            },delay)
+            
+        } else {
+            resolve();
+        }
+    })
 }
 
 
@@ -234,246 +248,221 @@ query('.random-array')
 
 
 const Algorithms = {
-    'Selection Sort' : selection_sort ,
-    'Insertion Sort' : insertion_sort ,
-    'Cocktail Sort' : cocktail_sort ,
-    'Bubble Sort' : bubble_sort ,
-    'Gnome Sort' : gnome_sort ,
-    'Quick Sort' : quick_sort ,
-    'Heap Sort' : heap_sort
+    'Selection Sort' : selectionSort ,
+    'Insertion Sort' : insertionSort ,
+    'Cocktail Sort' : cocktailSort ,
+    'Bubble Sort' : bubbleSort ,
+    'Gnome Sort' : gnomeSort ,
+    'Quick Sort' : quickSort ,
+    'Heap Sort' : heapSort
 }
 
 const SORT = elementById('SORT');
 
-SORT.addEventListener('click',() => {
+SORT.addEventListener('click',async () => {
     
     sorting_progress = 1;
     
     sorting_bar();
     
     disableElement('nav-menu');
-    disableElement('speed');
+    // disableElement('speed');
     disableElement('SORT');
     disableElement('size');
     
-    Algorithms[algorithm](0,size - 1);
+    const process = Algorithms[algorithm](size,bar_value,0,size - 1);
     
-    setTimeout(() => {
+    console.log(process)
     
-        enableElement('nav-menu');
-        enableElement('speed');
-        enableElement('SORT');
-        enableElement('size');
-        
-        elementById('SORT').innerText = 'Sort';
+    for ( const [ color , index ] of process )
+        await visualize(index,color);
     
-        sorting_progress = 0;
-        time = 0;
-    },time);
+
+    enableElement('nav-menu');
+    // enableElement('speed');
+    enableElement('SORT');
+    enableElement('size');
+    
+    elementById('SORT').innerText = 'Sort';
+
+    sorting_progress = 0;
+    time = 0;
 })
 
 
-// Bubble sort algorithm
 
-function bubble_sort(){
-    
-    for( let i = 0 ; i < size - 1 ; i++ ){
-        
-        for( let j = 0 ; j < size - i - 1 ; j++ ){
-            
-            visualize(j,c_1);
-            visualize(j + 1,c_2);
-            
-            if(bar_value[j] > bar_value[j + 1]){
-                
-                [ bar_value[j] , bar_value[j + 1] ] = [ bar_value[j + 1] , bar_value[j] ];
-                
-                visualize(j,c_2);
-                visualize(j + 1,c_1);
-            }
-            
-            visualize(j,main_color);
-            visualize(j + 1,main_color);
-        }
-        
-        visualize(size - 1 - i,sorted_color);
-    }
-    
-    visualize(0,sorted_color);
-}
+// 
+// // Selection sort algorithm
+// 
+// function selection_sort() {
+// 
+//     for (let i = 0; i < size - 1; i++){
+//         min = i;
+//         for (let j = size - 1; j > i; j--){
+//             visualize(j,c_1);
+//             if (bar_value[j] < bar_value[min]) min = j;
+//             visualize(j,main_color);
+//         }
+//         [bar_value[i], bar_value[min]] = [bar_value[min], bar_value[i]];
+//         visualize(i,sorted_color);
+//         if (min != i) visualize(min,main_color);
+//     }
+// 
+//     visualize(size - 1,sorted_color);
+// }
 
+// // Insertion sort algorithm
+// function insertion_sort() {
+//     for (let i = 0; i < size; i++) {
+//         temp = bar_value[i];
+//         visualize(i,c_2);
+//         let j = i - 1;
+//         for (j = i - 1; j >= 0 && bar_value[j] > temp; j--) {
+//             bar_value[j + 1] = bar_value[j];
+//             visualize(j,c_1);
+//             visualize(j + 1,c_2);
+//             visualize(j + 1,sorted_color);
+//             visualize(j,sorted_color);
+//         }
+//         bar_value[j + 1] = temp;
+//         visualize(i,c_1);
+//         visualize(i,sorted_color);
+//         visualize(j + 1,c_2);
+//         visualize(j + 1,sorted_color);
+//     }
+// }
 
-// Selection sort algorithm
+// // Gnome sort algorithm
+// function gnome_sort() {
+//     let index = 0;
+//     while (index < size) {
+//         if (bar_value[index] >= bar_value[index - 1] || index == 0){
+//             visualize(index,c_1);
+//             visualize(index,sorted_color);
+//             index++;
+//         }
+//         else {
+//             [bar_value[index], bar_value[index - 1]] = [bar_value[index - 1], bar_value[index]]
+//             visualize(index,c_2);
+//             visualize(index + 1,main_color);
+//             index--;
+//         }
+//     }
+//     return;
+// }
+// 
+// // Cocktail sort algorithm
+// function cocktail_sort(){
+//     let swapped = true;
+//     let index = 0;
+//     let lsize = size;
+//     while (swapped){
+//         swapped = false;
+//         for (let i = index; i < lsize - 1; ++i){
+//             visualize(i,c_1);
+//             visualize(i + 1,c_2);
+//             if (bar_value[i] > bar_value[i + 1]){
+//                 [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
+//                 visualize(i,c_2);
+//                 visualize(i + 1,c_1);
+//                 swapped = true;
+//             }
+//             visualize(i,main_color);
+//             visualize(i + 1,main_color);
+//         }
+//         swapped = false;
+//         lsize--;
+//         for (let i = lsize - 1; i >= index; i--) {
+//             visualize(i,c_1);
+//             visualize(i + 1,c_2);
+//             if (bar_value[i] > bar_value[i + 1]) {
+//                 [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
+//                 visualize(i,c_2);
+//                 visualize(i + 1,c_1);
+//                 swapped = true;
+//             }
+//             visualize(i,main_color);
+//             visualize(i + 1,main_color);
+//         }
+//         visualize(index,sorted_color);
+// 
+//         index++
+// 
+//         visualize(bars[lsize], bar_value[lsize], sorted_color);
+//     }
+//     for (let i = 0; i < size; i++)visualize(i,sorted_color)
+// }
+// 
+// // Quick sort algorithm
+// function quick_sort(start, end) {
+//     if (start > end){
+//         visualize(start,sorted_color);
+//         return;
+//     }
+//     if (start == end){
+//         visualize(start,sorted_color);
+//         return;
+//     }
+//     let pivot = bar_value[start];
+//     let head = start;
+//     let tail = end + 1;
+//     while (head < tail){
+//         do {
+//             visualize(head,c_1);
+//             visualize(head,main_color);
+//             head++;
+//         } while (bar_value[head] <= pivot);
+//         do {
+//             tail--;
+//             visualize(tail,c_2);
+//             visualize(tail,main_color);
+//         } while (bar_value[tail] > pivot);
+//         if (head < tail) [bar_value[head], bar_value[tail]] = [bar_value[tail], bar_value[head]];
+//     }
+//     [bar_value[start], bar_value[tail]] = [bar_value[tail], bar_value[start]];
+//     visualize(tail,sorted_color);
+//     quick_sort(start, tail - 1);
+//     quick_sort(tail + 1, end);
+// }
 
-function selection_sort() {
-
-    for (let i = 0; i < size - 1; i++){
-        min = i;
-        for (let j = size - 1; j > i; j--){
-            visualize(j,c_1);
-            if (bar_value[j] < bar_value[min]) min = j;
-            visualize(j,main_color);
-        }
-        [bar_value[i], bar_value[min]] = [bar_value[min], bar_value[i]];
-        visualize(i,sorted_color);
-        if (min != i) visualize(min,main_color);
-    }
-
-    visualize(size - 1,sorted_color);
-}
-
-// Insertion sort algorithm
-function insertion_sort() {
-    for (let i = 0; i < size; i++) {
-        temp = bar_value[i];
-        visualize(i,c_2);
-        let j = i - 1;
-        for (j = i - 1; j >= 0 && bar_value[j] > temp; j--) {
-            bar_value[j + 1] = bar_value[j];
-            visualize(j,c_1);
-            visualize(j + 1,c_2);
-            visualize(j + 1,sorted_color);
-            visualize(j,sorted_color);
-        }
-        bar_value[j + 1] = temp;
-        visualize(i,c_1);
-        visualize(i,sorted_color);
-        visualize(j + 1,c_2);
-        visualize(j + 1,sorted_color);
-    }
-}
-
-// Gnome sort algorithm
-function gnome_sort() {
-    let index = 0;
-    while (index < size) {
-        if (bar_value[index] >= bar_value[index - 1] || index == 0){
-            visualize(index,c_1);
-            visualize(index,sorted_color);
-            index++;
-        }
-        else {
-            [bar_value[index], bar_value[index - 1]] = [bar_value[index - 1], bar_value[index]]
-            visualize(index,c_2);
-            visualize(index + 1,main_color);
-            index--;
-        }
-    }
-    return;
-}
-
-// Cocktail sort algorithm
-function cocktail_sort(){
-    let swapped = true;
-    let index = 0;
-    let lsize = size;
-    while (swapped){
-        swapped = false;
-        for (let i = index; i < lsize - 1; ++i){
-            visualize(i,c_1);
-            visualize(i + 1,c_2);
-            if (bar_value[i] > bar_value[i + 1]){
-                [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
-                visualize(i,c_2);
-                visualize(i + 1,c_1);
-                swapped = true;
-            }
-            visualize(i,main_color);
-            visualize(i + 1,main_color);
-        }
-        swapped = false;
-        lsize--;
-        for (let i = lsize - 1; i >= index; i--) {
-            visualize(i,c_1);
-            visualize(i + 1,c_2);
-            if (bar_value[i] > bar_value[i + 1]) {
-                [bar_value[i], bar_value[i + 1]] = [bar_value[i + 1], bar_value[i]];
-                visualize(i,c_2);
-                visualize(i + 1,c_1);
-                swapped = true;
-            }
-            visualize(i,main_color);
-            visualize(i + 1,main_color);
-        }
-        visualize(index,sorted_color);
-        
-        index++
-        
-        visualize(bars[lsize], bar_value[lsize], sorted_color);
-    }
-    for (let i = 0; i < size; i++)visualize(i,sorted_color)
-}
-
-// Quick sort algorithm
-function quick_sort(start, end) {
-    if (start > end){
-        visualize(start,sorted_color);
-        return;
-    }
-    if (start == end){
-        visualize(start,sorted_color);
-        return;
-    }
-    let pivot = bar_value[start];
-    let head = start;
-    let tail = end + 1;
-    while (head < tail){
-        do {
-            visualize(head,c_1);
-            visualize(head,main_color);
-            head++;
-        } while (bar_value[head] <= pivot);
-        do {
-            tail--;
-            visualize(tail,c_2);
-            visualize(tail,main_color);
-        } while (bar_value[tail] > pivot);
-        if (head < tail) [bar_value[head], bar_value[tail]] = [bar_value[tail], bar_value[head]];
-    }
-    [bar_value[start], bar_value[tail]] = [bar_value[tail], bar_value[start]];
-    visualize(tail,sorted_color);
-    quick_sort(start, tail - 1);
-    quick_sort(tail + 1, end);
-}
-
-// Heap sort algorithm
-function heap_sort(){
-    for (let i = 0; i < size; i++) heap_up(i);
-    for (let i = 0; i < size - 1; i++) {
-        let last = size - 1 - i;
-        [bar_value[0], bar_value[last]] = [bar_value[last], bar_value[0]];
-        visualize(0,sorted_color);
-        visualize(last,sorted_color);
-        heap_down(last);
-    }
-}
-function heap_up(i){
-    let root = Math.floor((i - 1) / 2);
-    while (i > 0 && bar_value[root] < bar_value[i]) {
-        visualize(i,c_1);
-        visualize(root,c_2);
-        [bar_value[i], bar_value[root]] = [bar_value[root], bar_value[i]];
-        visualize(i,main_color);
-        visualize(root,main_color);
-        i = root;
-        root = Math.floor((i - 1) / 2);
-    }
-    visualize(i,main_color);
-}
-function heap_down(size){
-    let i = 0;
-    while (2 * i + 1 < size) {
-        let child = 2 * i + 1;
-        if (2 * i + 2 < size && bar_value[2 * i + 2] >= bar_value[child]) child = 2 * i + 2;
-        visualize(i,c_1);
-        visualize(child,c_2);
-        visualize(i,main_color);
-        visualize(child,main_color);
-        if (bar_value[i] >= bar_value[child]) return;
-        [bar_value[i], bar_value[child]] = [bar_value[child], bar_value[i]];
-        i = child;
-    }
-}
+// // Heap sort algorithm
+// function heap_sort(){
+//     for (let i = 0; i < size; i++) heap_up(i);
+//     for (let i = 0; i < size - 1; i++) {
+//         let last = size - 1 - i;
+//         [bar_value[0], bar_value[last]] = [bar_value[last], bar_value[0]];
+//         visualize(0,sorted_color);
+//         visualize(last,sorted_color);
+//         heap_down(last);
+//     }
+// }
+// function heap_up(i){
+//     let root = Math.floor((i - 1) / 2);
+//     while (i > 0 && bar_value[root] < bar_value[i]) {
+//         visualize(i,c_1);
+//         visualize(root,c_2);
+//         [bar_value[i], bar_value[root]] = [bar_value[root], bar_value[i]];
+//         visualize(i,main_color);
+//         visualize(root,main_color);
+//         i = root;
+//         root = Math.floor((i - 1) / 2);
+//     }
+//     visualize(i,main_color);
+// }
+// function heap_down(size){
+//     let i = 0;
+//     while (2 * i + 1 < size) {
+//         let child = 2 * i + 1;
+//         if (2 * i + 2 < size && bar_value[2 * i + 2] >= bar_value[child]) child = 2 * i + 2;
+//         visualize(i,c_1);
+//         visualize(child,c_2);
+//         visualize(i,main_color);
+//         visualize(child,main_color);
+//         if (bar_value[i] >= bar_value[child]) return;
+//         [bar_value[i], bar_value[child]] = [bar_value[child], bar_value[i]];
+//         i = child;
+//     }
+// }
 
 // Generate new unsorted array
 randomizeValues();
