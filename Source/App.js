@@ -1,4 +1,5 @@
 
+import progressAnimation from './ProgressAnimation.js'
 import * as Algorithms from 'Algorithms'
 
 
@@ -34,6 +35,12 @@ const showElement = ( element ) =>
 const swapContent = ( elementA , elementB ) =>
     [ elementA.innerText , elementB.innerText ] =
         [ elementB.innerText , elementA.innerText ];
+
+
+
+
+const button_sort = elementById('SORT');
+const elements_bars = query('.BARS');
 
 
 // Dark and Light mode switch
@@ -109,16 +116,21 @@ function selectAlgorithm ( event ){
 let
     sorting_progress = 0 ,
     sortingProcess ,
-    sorting_text = 'Sorting' ,
     bar_value = [] ,
     cancel = false ,
+    animation ,
     width = 2 ,
-    BARS = query('.BARS') ,
     bars = [] ,
     size = 35 ,
     time = 0 ;
 
-let delay = 10000 / (floor(size / 10) * 500);
+
+
+const delayFrom = ( factor ) =>
+    10000 / (floor(size / 10) * factor);
+    
+
+let delay = delayFrom(500);
 
 
 elementById('size')
@@ -141,27 +153,19 @@ function onSpeedChange ( event ){
     
     const { value } = event.target;
     
-    delay = 10000 / (floor(size / 10) * value);    
+    delay = delayFrom(value);
 }
     
 
-// Progress of the sorting
 
-const AnimationSteps = [ '/' , '-' , '\\' , '|' ];
+function animateSorting (){
+    
+    const steps = progressAnimation();
+    
+    const animate = () =>
+        button_sort.innerText = steps.next().value;
 
-async function sorting_bar (){
-    while (sorting_progress){
-        
-        const chars = [ ... sorting_text ];
-        
-        chars[sorting_progress % sorting_text.length] = AnimationSteps[sorting_progress % 4];
-        
-        elementById('SORT').innerText = chars.join('');
-        
-        sorting_progress++;
-        
-        await sleep(500);
-    }
+    animation = setInterval(animate,500);
 }
 
 
@@ -170,7 +174,9 @@ async function sorting_bar (){
 async function randomizeValues (){
     
     cancel = true;
+    
     await sortingProcess;
+    clearInterval(animation);
     
     enableElement('nav-menu');
     enableElement('SORT');
@@ -179,8 +185,8 @@ async function randomizeValues (){
     sorting_progress = 0;
     time = 0;
     
-    elementById('SORT').innerText = 'Sort';
-    BARS.innerHTML = '';
+    elements_bars.innerHTML = '';
+    button_sort.innerText = 'Sort';
     
     for ( let i = 0 ; i < size ; i++ ){
         
@@ -190,7 +196,7 @@ async function randomizeValues (){
 
         bar.classList.add('bar');
         
-        BARS.appendChild(bar);
+        elements_bars.appendChild(bar);
         
         bar.style.height = `${ value }px`;
         bar.style.width = `${ width }%`;
@@ -201,7 +207,7 @@ async function randomizeValues (){
     const stable = document.createElement('div');
     stable.classList.add('stable');
     
-    BARS.appendChild(stable);
+    elements_bars.appendChild(stable);
 }
 
 
@@ -232,9 +238,8 @@ query('.random-array')
     .addEventListener('click',randomizeValues);
 
 
-const SORT = elementById('SORT');
 
-SORT.addEventListener('click',() => {
+button_sort.addEventListener('click',() => {
     sortingProcess = sortValues();
 })
 
@@ -244,7 +249,7 @@ async function sortValues (){
     sorting_progress = 1;
     cancel = false;
     
-    sorting_bar();
+    animateSorting();
     
     disableElement('nav-menu');
     disableElement('SORT');
@@ -264,13 +269,14 @@ async function sortValues (){
     enableElement('SORT');
     enableElement('size');
     
-    elementById('SORT').innerText = 'Sort';
+    clearInterval(animation);
+    
+    button_sort.innerText = 'Sort';
 
     sorting_progress = 0;
     time = 0;
 }
 
 
-// Generate new unsorted array
 
 randomizeValues();
