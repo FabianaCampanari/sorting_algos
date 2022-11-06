@@ -18,9 +18,9 @@ let
     sorting_progress = 0 ,
     sortingProcess ,
     algorithm = 'Bubble Sort' ,
-    bar_value = [] ,
-    cancel = false ,
     animation ,
+    cancel = false ,
+    values = [] ,
     bars = [] ,
     size = 35 ,
     time = 0 ;
@@ -38,11 +38,20 @@ const algorithmSelection =
 const activeSelection =
     byId('nav-menu');
 
-const elements_bars = 
-    query('.BARS');
+const button_randomize =
+    query('.random-array');
+
+const slider_speed =
+    byId('speed');
+
+const slider_size =
+    byId('size');
 
 const button_sort = 
     byId('SORT');
+
+const list_bars = 
+    query('.BARS');
 
 
     
@@ -54,7 +63,6 @@ function onAlgorithmSelect ( event ){
     
     algorithm = activeSelection.innerText;
 }
-
 
 function onSizeChange ( event ){
     size = event.target.value;
@@ -94,11 +102,11 @@ async function randomizeValues (){
     sorting_progress = 0;
     time = 0;
     
-    elements_bars.innerHTML = '';
+    list_bars.innerHTML = '';
     button_sort.innerText = 'Sort';
     
+    values = [];
     bars = [];
-    bar_value = [];
     
     prepareBars();
 }
@@ -111,7 +119,7 @@ function prepareBars (){
     
     const stable = create('div');
     stable.classList.add('stable');
-    elements_bars.appendChild(stable);
+    list_bars.appendChild(stable);
 }
 
 
@@ -126,14 +134,14 @@ function generateBar (){
     style.height = `${ value }px`;
     style.width = `${ 60 / size }%`;
     
-    elements_bars.appendChild(bar);
-    bar_value.push(value);
+    list_bars.appendChild(bar);
+    values.push(value);
     bars.push(bar);
 }
 
 async function visualize ( index , color ){
         
-    const [ value , bar ] = [ bar_value[index] , bars[index] ];
+    const [ value , bar ] = [ values[index] , bars[index] ];
     
     if(bar){
         
@@ -148,9 +156,9 @@ async function visualize ( index , color ){
 
 
 function disableNavigation ( state ){
-    byId('nav-menu').disabled = state;
-    byId('SORT').disabled = state;
-    byId('size').disabled = state;
+    activeSelection.disabled = state;
+    button_sort.disabled = state;
+    slider_size.disabled = state;
 }
 
 
@@ -166,7 +174,7 @@ async function sort (){
     disableNavigation(true);
     animateSorting();
     
-    const parameters = [ size , bar_value , 0 , size - 1 ]
+    const parameters = [ size , values , 0 , size - 1 ]
     
     const process = Algorithms[algorithm]( ... parameters );
     
@@ -193,17 +201,18 @@ async function sort (){
 for ( const choice of algorithmSelection )
     choice.addEventListener('click',onAlgorithmSelect);
 
-query('.random-array')
+button_randomize
     .addEventListener('click',randomizeValues);
 
-byId('speed')
+slider_speed
     .addEventListener('input',onSpeedChange);
-
-byId('size')
-    .addEventListener('input',onSizeChange);
 
 button_sort
     .addEventListener('click',onStartSorting);
+
+slider_size
+    .addEventListener('input',onSizeChange);
+
 
 
 randomizeValues();
