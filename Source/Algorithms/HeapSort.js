@@ -29,11 +29,10 @@ function * heap_up ( size , items , i ){
     
     while ( i > 0 && items[root] < items[i]){
         
-        yield [ Alpha , i ]
-        yield [ Beta , root ]
-        
         [ items[i] , items[root] ] = [ items[root] , items[i] ];
         
+        yield [ Alpha , i ]
+        yield [ Beta , root ]
         yield [ Unsorted , i ]
         yield [ Unsorted , root ]
 
